@@ -1,5 +1,9 @@
 [
     {
+        "merged": "/Users/aareundo/Desktop/projects/robust-robotex-app/app/build/intermediates/res/merged/debug/drawable-xxhdpi/ic_launcher.png",
+        "source": "/Users/aareundo/Desktop/projects/robust-robotex-app/app/src/main/res/drawable-xxhdpi/ic_launcher.png"
+    },
+    {
         "merged": "/Users/aareundo/Desktop/projects/testmuselib/app/build/intermediates/res/merged/debug/drawable-xxhdpi/ic_launcher.png",
         "source": "/Users/aareundo/Desktop/projects/testmuselib/app/src/main/res/drawable-xxhdpi/ic_launcher.png"
     }

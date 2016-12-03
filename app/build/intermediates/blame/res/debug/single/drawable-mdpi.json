@@ -4,6 +4,14 @@
         "source": "/Users/aareundo/Desktop/projects/testmuselib/app/src/main/res/drawable-mdpi/logo_robotex.png"
     },
     {
+        "merged": "/Users/aareundo/Desktop/projects/robust-robotex-app/app/build/intermediates/res/merged/debug/drawable-mdpi/ic_launcher.png",
+        "source": "/Users/aareundo/Desktop/projects/robust-robotex-app/app/src/main/res/drawable-mdpi/ic_launcher.png"
+    },
+    {
+        "merged": "/Users/aareundo/Desktop/projects/robust-robotex-app/app/build/intermediates/res/merged/debug/drawable-mdpi/logo_robotex.png",
+        "source": "/Users/aareundo/Desktop/projects/robust-robotex-app/app/src/main/res/drawable-mdpi/logo_robotex.png"
+    },
+    {
         "merged": "/Users/aareundo/Desktop/projects/testmuselib/app/build/intermediates/res/merged/debug/drawable-mdpi/ic_launcher.png",
         "source": "/Users/aareundo/Desktop/projects/testmuselib/app/src/main/res/drawable-mdpi/ic_launcher.png"
     }
