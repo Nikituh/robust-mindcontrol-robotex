@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<instant-run
+    api-level="19"
+    density="xhdpi"
+    format="8"
+    plugin-version="2.2.0"
+    timestamp="149887763581502"
+    token="1154730911210872908"
+    verifier="FULL_BUILD_REQUESTED" >
+
+    <task
+        name="javac"
+        duration="288" />
+    <task
+        name="instant-run-dex"
+        duration="0" />
+    <task
+        name="instant-run-transform"
+        duration="137" />
+    <task
+        name="verifier"
+        duration="46" />
+
+    <artifact
+        location="/Users/aareundo/Desktop/projects/testmuselib/app/build/outputs/apk/app-debug.apk"
+        type="MAIN" />
+
+    <build
+        timestamp="149887763581502"
+        verifier="FULL_BUILD_REQUESTED" >
+        <artifact
+            location="/Users/aareundo/Desktop/projects/testmuselib/app/build/outputs/apk/app-debug.apk"
+            type="MAIN" />
+    </build>
+
+</instant-run>
