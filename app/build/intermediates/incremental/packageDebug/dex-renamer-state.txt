@@ -1,4 +1,4 @@
-#Fri Dec 02 11:52:16 EET 2016
-base.0=/Users/aareundo/Desktop/projects/testmuselib/app/build/intermediates/transforms/dex/debug/folders/1000/1f/main
+#Thu Nov 23 14:36:01 EET 2017
+base.0=/Users/aareundo/Desktop/projects/robust-mindcontrol-robotex/app/build/intermediates/transforms/dex/debug/folders/1000/1f/main
 renamed.0=classes.dex
-file.0=/Users/aareundo/Desktop/projects/testmuselib/app/build/intermediates/transforms/dex/debug/folders/1000/1f/main/classes.dex
+file.0=/Users/aareundo/Desktop/projects/robust-mindcontrol-robotex/app/build/intermediates/transforms/dex/debug/folders/1000/1f/main/classes.dex

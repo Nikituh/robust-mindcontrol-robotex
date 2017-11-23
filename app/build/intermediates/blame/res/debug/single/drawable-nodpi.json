@@ -1,5 +1,9 @@
 [
     {
+        "merged": "/Users/aareundo/Desktop/projects/robust-mindcontrol-robotex/app/build/intermediates/res/merged/debug/drawable-nodpi/logo_robotex.png",
+        "source": "/Users/aareundo/Desktop/projects/robust-mindcontrol-robotex/app/src/main/res/drawable-nodpi/logo_robotex.png"
+    },
+    {
         "merged": "/Users/aareundo/Desktop/projects/robust-robotex-app/app/build/intermediates/res/merged/debug/drawable-nodpi/logo_robotex.png",
         "source": "/Users/aareundo/Desktop/projects/robust-robotex-app/app/src/main/res/drawable-nodpi/logo_robotex.png"
     },

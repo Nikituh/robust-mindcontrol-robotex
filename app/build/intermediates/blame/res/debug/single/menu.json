@@ -4,6 +4,10 @@
         "source": "/Users/aareundo/Desktop/projects/testmuselib/app/src/main/res/menu/main.xml"
     },
     {
+        "merged": "/Users/aareundo/Desktop/projects/robust-mindcontrol-robotex/app/build/intermediates/res/merged/debug/menu/main.xml",
+        "source": "/Users/aareundo/Desktop/projects/robust-mindcontrol-robotex/app/src/main/res/menu/main.xml"
+    },
+    {
         "merged": "/Users/aareundo/Desktop/projects/robust-robotex-app/app/build/intermediates/res/merged/debug/menu/main.xml",
         "source": "/Users/aareundo/Desktop/projects/robust-robotex-app/app/src/main/res/menu/main.xml"
     }
