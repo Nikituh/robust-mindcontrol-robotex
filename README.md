@@ -3,17 +3,12 @@
 
 Robust **Android Studio** solution of Robotex's Mindcontrol competition to assist struggling participants.
 
-On purpose checked out dirty commit with bare functionality so it wouldn't give too much away (honestly, I really do not write such crappy code: leave unused methods just standing there, an activity with 800 lines, commented out functionality etc.)
-
-Neither will I be explaining Android development basics. Google it! Besides, it's not like you need it. This is a hackathon.
+On purpose checked out dirty commit with bare functionality so it wouldn't give too much away. It features unused functions, classes, even an entire VEX IQ BLE connection logic that is entirely unused. It's your job to filter out useless information :)
 
 ## Prerequisites
 
 * Android Studio
 * Android SDK - downloaded from within Android Studio
-* Debug drivers (Windows only, Linux and Mac automatically find them when a phone is plugged in)
-
-I will not be explaining how to install Android Studio. There are enough tutorials out there. Google it.
 
 ## What it does
 
@@ -23,9 +18,8 @@ I will not be explaining how to install Android Studio. There are enough tutoria
 
 ## What it needs to do
 
-* Send data other than just accelerometer data
+* Send data other than accelerometer data
 * Specific commands for specific data (not two-in-one as in the example)
-* Not be timer-based
 
 ## Hints
 
