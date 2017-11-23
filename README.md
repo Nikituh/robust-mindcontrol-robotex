@@ -5,6 +5,7 @@ Robust **Android Studio** solution of Robotex's Mindcontrol competition to assis
 
 On purpose checked out dirty commit with bare functionality so it wouldn't give too much away. It features unused functions, classes, even an entire VEX IQ BLE connection logic that is entirely unused. It's your job to filter out useless information :)
 
+Additionally, this repository contains a bunch of build files that should be under version control, but I'm dumb and lazy :\
 ## Prerequisites
 
 * Android Studio
