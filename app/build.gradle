@@ -1,28 +1,40 @@
 apply plugin: 'com.android.application'
 
+apply plugin: 'kotlin-android'
+
+apply plugin: 'kotlin-android-extensions'
+
 android {
-    compileSdkVersion 25
-    buildToolsVersion "25.0.2"
-
+    compileSdkVersion 28
     defaultConfig {
-        applicationId "com.choosemuse.example.libmuse"
+        applicationId "com.nikitech.robotex.mindcontrol"
         minSdkVersion 17
-        targetSdkVersion 25
-        compileOptions {
-            sourceCompatibility JavaVersion.VERSION_1_7
-            targetCompatibility JavaVersion.VERSION_1_7
-        }
+        targetSdkVersion 28
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
-
     buildTypes {
         release {
             minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
 }
 
 dependencies {
-    compile 'com.android.support:support-v4:23.1.1'
-    compile files('libs/libmuse_android.jar')
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation"org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation 'com.android.support:appcompat-v7:28.0.0'
+    implementation "org.jetbrains.anko:anko:0.10.5"
+    implementation 'khttp:khttp:0.1.0'
+    implementation 'com.jjoe64:graphview:4.2.2'
+    implementation files('libs/libmuse_android.jar')
+
+}
+
+kotlin {
+    experimental {
+        coroutines "enable"
+    }
 }
