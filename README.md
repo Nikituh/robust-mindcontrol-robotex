@@ -15,3 +15,7 @@ Sample Application made for Robotex's Mind Control competitions.
 
 * There is no direct link to send data to the Raspberry from EEG data results
 * Proper documentation – this is partly because I'm lazy, but partly also so your life wouldn't be too easy. You need to figure some things out for yourselves.
+
+### Legacy
+
+There is a legacy **java** project in the legacy folder that was originally built for a hackathon, later used in Robotex '16 and '17. It's basically a clone of Muse's own sample applications with modifications.
