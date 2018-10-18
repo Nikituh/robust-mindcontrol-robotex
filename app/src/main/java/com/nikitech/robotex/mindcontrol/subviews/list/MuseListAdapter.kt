@@ -13,6 +13,8 @@ class MuseListAdapter(context: Context)  : ArrayAdapter<Muse>(context, -1) {
 
     var width: Int = 0
 
+    var selectedItem = -1
+
     override fun getCount(): Int {
         return items.size
     }
@@ -30,14 +32,14 @@ class MuseListAdapter(context: Context)  : ArrayAdapter<Muse>(context, -1) {
         if (convertView == null) {
             cell = MuseListCell(context)
 
-            val height = (40 * context.resources.displayMetrics.density).toInt()
+            val height = (80 * context.resources.displayMetrics.density).toInt()
             cell.layoutParams = AbsListView.LayoutParams(width, height)
             cell.setFrame(0, 0, width, height)
         } else {
             cell = convertView as MuseListCell
         }
 
-        cell.update(item)
+        cell.update(item, position == selectedItem)
         cell.layoutSubviews()
 
         return cell

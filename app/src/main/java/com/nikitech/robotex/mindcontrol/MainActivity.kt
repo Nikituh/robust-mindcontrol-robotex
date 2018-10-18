@@ -2,6 +2,7 @@ package com.nikitech.robotex.mindcontrol
 
 import android.Manifest
 import android.app.AlertDialog
+import android.content.pm.ActivityInfo
 import android.content.pm.PackageManager
 import android.graphics.Color
 import android.os.*
@@ -19,7 +20,9 @@ import com.jjoe64.graphview.series.DataPoint
 import com.jjoe64.graphview.series.LineGraphSeries
 import android.view.WindowManager
 import com.nikitech.robotex.mindcontrol.model.*
+import com.nikitech.robotex.mindcontrol.subviews.list.MuseListCell
 import com.nikitech.robotex.mindcontrol.utils.Colors
+import org.jetbrains.anko.sdk25.coroutines.onItemClick
 import java.util.*
 
 class MainActivity : AppCompatActivity() {
@@ -104,6 +107,8 @@ class MainActivity : AppCompatActivity() {
 
         super.onCreate(savedInstanceState)
 
+        this.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+
         supportActionBar!!.hide()
 
         // Muse 2016 (MU-02) headbands use Bluetooth Low Energy technology to
@@ -130,7 +135,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private val second = 1000
-    val lock = Any()
+    private val lock = Any()
 
     private fun updateUI() {
 
@@ -203,7 +208,7 @@ class MainActivity : AppCompatActivity() {
             Networking.INSTANCE.stop()
         }
 
-        contentView!!.refresh.onClick {
+        contentView!!.connect.refresh.onClick {
             manager!!.stopListening()
             manager!!.startListening()
         }
@@ -212,6 +217,13 @@ class MainActivity : AppCompatActivity() {
             item.onClick {
                 contentView!!.setActiveItem(item)
             }
+        }
+
+        contentView!!.connect.list.onItemClick { _, view, position, _ ->
+            val cell = view as MuseListCell
+            println(cell.name)
+            contentView!!.connect.adapter.selectedItem = position
+            contentView!!.connect.adapter.notifyDataSetChanged()
         }
     }
 
@@ -224,7 +236,7 @@ class MainActivity : AppCompatActivity() {
         contentView!!.buttons.reverse.setOnClickListener(null)
         contentView!!.buttons.stop.setOnClickListener(null)
 
-        contentView!!.refresh.setOnClickListener(null)
+        contentView!!.connect.refresh.setOnClickListener(null)
 
         // It is important to call stopListening when the Activity is paused
         // to avoid a resource leak from the LibMuse library.
@@ -249,7 +261,6 @@ class MainActivity : AppCompatActivity() {
         // This is only needed if you want to do File I/O.
         fileThread.start()
     }
-
 
     /**
      * We don't want to block the UI thread while we write to a file, so the file
@@ -290,6 +301,10 @@ class MainActivity : AppCompatActivity() {
         when (requestCode) {
             PERMISSION_REQUEST_COARSE_LOCATION -> {
 
+                if (grantResults.isEmpty()) {
+                    return
+                }
+
                 if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     Log.d("MainActivity", "coarse location permission granted")
                     initMuse()
@@ -312,18 +327,19 @@ class MainActivity : AppCompatActivity() {
             return
         }
 
-        muse = manager!!.muses[0]
-
-        muse!!.registerConnectionListener(connectionListener)
-        muse!!.registerDataListener(dataListener, MuseDataPacketType.EEG)
-        muse!!.registerDataListener(dataListener, MuseDataPacketType.ALPHA_RELATIVE)
-        muse!!.registerDataListener(dataListener, MuseDataPacketType.ACCELEROMETER)
-        muse!!.registerDataListener(dataListener, MuseDataPacketType.BATTERY)
-        muse!!.registerDataListener(dataListener, MuseDataPacketType.DRL_REF)
-        muse!!.registerDataListener(dataListener, MuseDataPacketType.QUANTIZATION)
-
-        // Initiate a connection to the headband and stream the data asynchronously.
-        muse!!.runAsynchronously()
+        contentView!!.connect.refreshList(manager!!.muses)
+//        muse = manager!!.muses[0]
+//
+//        muse!!.registerConnectionListener(connectionListener)
+//        muse!!.registerDataListener(dataListener, MuseDataPacketType.EEG)
+//        muse!!.registerDataListener(dataListener, MuseDataPacketType.ALPHA_RELATIVE)
+//        muse!!.registerDataListener(dataListener, MuseDataPacketType.ACCELEROMETER)
+//        muse!!.registerDataListener(dataListener, MuseDataPacketType.BATTERY)
+//        muse!!.registerDataListener(dataListener, MuseDataPacketType.DRL_REF)
+//        muse!!.registerDataListener(dataListener, MuseDataPacketType.QUANTIZATION)
+//
+//        // Initiate a connection to the headband and stream the data asynchronously.
+//        muse!!.runAsynchronously()
     }
 
     fun receiveMuseConnectionPacket(p: MuseConnectionPacket, muse: Muse) {

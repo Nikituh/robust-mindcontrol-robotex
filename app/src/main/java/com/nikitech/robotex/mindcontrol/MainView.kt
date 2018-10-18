@@ -15,12 +15,12 @@ class MainView(context: Context) : BaseView(context) {
 
     val tabBar = TabBar(context)
 
+    val connect = ConnectContainer(context)
+
     val accelerometer = GraphContainer(context)
     val EEG = GraphContainer(context)
 
     val buttons = ButtonContainer(context)
-
-    val refresh = ImageButton(context, R.drawable.ic_refresh_black_24dp)
 
     val accelGraphs = mutableListOf<GraphView>()
     val EEGGraphs = mutableListOf<GraphView>()
@@ -28,6 +28,8 @@ class MainView(context: Context) : BaseView(context) {
     init {
 
         addView(tabBar)
+
+        addView(connect)
 
         accelGraphs.add(createGraph("X"))
         accelGraphs.add(createGraph("Y"))
@@ -47,9 +49,6 @@ class MainView(context: Context) : BaseView(context) {
         addView(EEG)
 
         addView(buttons)
-
-        refresh.setBackgroundColor(Color.GREEN)
-        addView(refresh)
 
         setMainViewFrame(false)
 
@@ -73,6 +72,7 @@ class MainView(context: Context) : BaseView(context) {
         w = frame.width - 2 * padding
         h = frame.height - (tabBar.frame.height + 2 * padding)
 
+        connect.setFrame(x, y, w, h)
         accelerometer.setFrame(x, y, w, h)
         EEG.setFrame(x, y, w, h)
         buttons.setFrame(x, y, w, h)
@@ -84,13 +84,6 @@ class MainView(context: Context) : BaseView(context) {
 //
 //        buttons.setFrame(leftPadding, y, size, size)
 
-        val buttonSize = (60 * getDensity()).toInt()
-
-        x = frame.width - (buttonSize + padding)
-        y = frame.height - (buttonSize + padding)
-
-        refresh.setFrame(x, y, buttonSize, buttonSize)
-        refresh.setCornerRadius((buttonSize / 2).toFloat())
     }
 
     private fun createGraph(title: String) : GraphView {
@@ -128,7 +121,7 @@ class MainView(context: Context) : BaseView(context) {
         accelerometer.visibility = View.GONE
         buttons.visibility = View.GONE
 
-        refresh.visibility = View.VISIBLE
+        connect.visibility = View.VISIBLE
     }
 
     private fun setControlActive() {
@@ -136,7 +129,7 @@ class MainView(context: Context) : BaseView(context) {
 
         EEG.visibility = View.GONE
         accelerometer.visibility = View.GONE
-        refresh.visibility = View.GONE
+        connect.visibility = View.GONE
 
         buttons.visibility = View.VISIBLE
     }
@@ -146,7 +139,7 @@ class MainView(context: Context) : BaseView(context) {
 
         EEG.visibility = View.GONE
         buttons.visibility = View.GONE
-        refresh.visibility = View.GONE
+        connect.visibility = View.GONE
 
         accelerometer.visibility = View.VISIBLE
     }
@@ -156,7 +149,7 @@ class MainView(context: Context) : BaseView(context) {
 
         accelerometer.visibility = View.GONE
         buttons.visibility = View.GONE
-        refresh.visibility = View.GONE
+        connect.visibility = View.GONE
 
         EEG.visibility = View.VISIBLE
     }
