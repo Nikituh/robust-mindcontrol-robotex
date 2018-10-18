@@ -76,14 +76,6 @@ class MainView(context: Context) : BaseView(context) {
         accelerometer.setFrame(x, y, w, h)
         EEG.setFrame(x, y, w, h)
         buttons.setFrame(x, y, w, h)
-
-//        val leftPadding = (50 * getDensity()).toInt()
-//        val size = frame.width - 2 * leftPadding
-//
-//        y += h + padding
-//
-//        buttons.setFrame(leftPadding, y, size, size)
-
     }
 
     private fun createGraph(title: String) : GraphView {

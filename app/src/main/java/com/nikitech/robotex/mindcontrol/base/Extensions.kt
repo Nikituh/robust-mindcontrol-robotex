@@ -2,6 +2,7 @@ package mobile.ecofleet.com.common.base
 
 import android.animation.Animator
 import android.animation.ObjectAnimator
+import android.graphics.Typeface
 import android.view.View
 import android.widget.*
 
@@ -84,6 +85,10 @@ fun BaseView.isLargeTablet(): Boolean {
     }
 
     return greater > 1920 && lesser > 1080
+}
+
+fun TextView.toBold() {
+    this.setTypeface(null, Typeface.BOLD)
 }
 
 val BaseView.isLandScape: Boolean

@@ -1,5 +1,8 @@
 package mobile.ecofleet.com.common.base
 
+import android.graphics.Color
+import android.view.View
+
 /**
  * Created by aareundo on 30/06/2017.
  */
@@ -43,6 +46,10 @@ open class BaseView(context: android.content.Context) : android.widget.RelativeL
 
     fun setBorderColor(width: Int, color: Int) {
         (background as android.graphics.drawable.GradientDrawable).setStroke(width, color)
+    }
+
+    fun removeBorder() {
+        (background as android.graphics.drawable.GradientDrawable).setStroke(0, Color.TRANSPARENT)
     }
 
     fun setFrame(x: Int, y: Int, width: Int, height: Int) {
@@ -132,6 +139,14 @@ open class BaseView(context: android.content.Context) : android.widget.RelativeL
             val manager = service as android.view.inputmethod.InputMethodManager
             manager.hideSoftInputFromWindow(view.windowToken, 0)
         }
+    }
+
+    fun show() {
+        visibility = View.VISIBLE
+    }
+    
+    fun hide() {
+        visibility = View.GONE
     }
 }
 

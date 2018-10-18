@@ -137,6 +137,8 @@ class MainActivity : AppCompatActivity() {
     private val second = 1000
     private val lock = Any()
 
+    private var activeMuse: Muse? = null
+
     private fun updateUI() {
 
         val eeg1list = mutableListOf<DataPoint>()
@@ -219,11 +221,31 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+        contentView!!.connect.connect.onClick {
+
+            activeMuse!!.registerConnectionListener(connectionListener)
+            activeMuse!!.registerDataListener(dataListener, MuseDataPacketType.EEG)
+            activeMuse!!.registerDataListener(dataListener, MuseDataPacketType.ALPHA_RELATIVE)
+            activeMuse!!.registerDataListener(dataListener, MuseDataPacketType.ACCELEROMETER)
+            activeMuse!!.registerDataListener(dataListener, MuseDataPacketType.BATTERY)
+            activeMuse!!.registerDataListener(dataListener, MuseDataPacketType.DRL_REF)
+            activeMuse!!.registerDataListener(dataListener, MuseDataPacketType.QUANTIZATION)
+
+            activeMuse!!.runAsynchronously()
+        }
+
+        val context = this
         contentView!!.connect.list.onItemClick { _, view, position, _ ->
+
             val cell = view as MuseListCell
-            println(cell.name)
+
+            context.activeMuse = cell.muse
+
             contentView!!.connect.adapter.selectedItem = position
             contentView!!.connect.adapter.notifyDataSetChanged()
+            contentView!!.connect.connect.show()
+
+            contentView!!.connect.show()
         }
     }
 
@@ -327,19 +349,15 @@ class MainActivity : AppCompatActivity() {
             return
         }
 
-        contentView!!.connect.refreshList(manager!!.muses)
-//        muse = manager!!.muses[0]
-//
-//        muse!!.registerConnectionListener(connectionListener)
-//        muse!!.registerDataListener(dataListener, MuseDataPacketType.EEG)
-//        muse!!.registerDataListener(dataListener, MuseDataPacketType.ALPHA_RELATIVE)
-//        muse!!.registerDataListener(dataListener, MuseDataPacketType.ACCELEROMETER)
-//        muse!!.registerDataListener(dataListener, MuseDataPacketType.BATTERY)
-//        muse!!.registerDataListener(dataListener, MuseDataPacketType.DRL_REF)
-//        muse!!.registerDataListener(dataListener, MuseDataPacketType.QUANTIZATION)
-//
-//        // Initiate a connection to the headband and stream the data asynchronously.
-//        muse!!.runAsynchronously()
+        val list = mutableListOf<Muse>()
+        list.add(manager!!.muses[0])
+        list.add(manager!!.muses[0])
+        list.add(manager!!.muses[0])
+        contentView!!.connect.refreshList(list)
+
+//        contentView!!.connect.refreshList(manager!!.muses)
+
+
     }
 
     fun receiveMuseConnectionPacket(p: MuseConnectionPacket, muse: Muse) {

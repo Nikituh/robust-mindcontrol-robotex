@@ -1,8 +1,11 @@
 package com.nikitech.robotex.mindcontrol.subviews
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Color
+import android.view.Gravity
 import android.widget.ListView
+import android.widget.TextView
 import com.choosemuse.libmuse.Muse
 import com.nikitech.robotex.mindcontrol.R
 import com.nikitech.robotex.mindcontrol.subviews.list.MuseListAdapter
@@ -13,17 +16,34 @@ import org.jetbrains.anko.runOnUiThread
 
 class ConnectContainer(context: Context) : BaseView(context) {
 
+    val header = TextView(context)
+
     val list = ListView(context)
     val adapter = MuseListAdapter(context)
+
+    val connect = TextButton(context, "Connect")
 
     val refresh = ImageButton(context, R.drawable.ic_refresh_black_24dp)
 
     init {
 
-        list.backgroundColor = Color.rgb(245, 245, 245)
+        header.text =
+                "If you don't see a list of Brain scanners, " +
+                "tap the button on the top right of the screen. " +
+                "To connect to a device, click on one."
+        header.gravity = Gravity.CENTER
+        addView(header)
+
+        list.setBackgroundColor(Color.rgb(245, 245, 245))
         addView(list)
 
-        refresh.setBackgroundColor(Color.rgb(0, 150, 0))
+        connect.hide()
+        connect.setBackgroundColor(Color.rgb(0, 180, 180))
+        connect.text.setTextColor(Color.WHITE)
+
+        addView(connect)
+
+        refresh.setBackgroundColor(Color.rgb(0, 180, 0))
         addView(refresh)
 
         list.adapter = adapter
@@ -35,11 +55,24 @@ class ConnectContainer(context: Context) : BaseView(context) {
 
         var x = 0
         var y = 0
-        var w = frame.width / 2 * 3
-        var h = frame.width
+        var w = frame.width
+        var h = frame.width / 7
+
+        header.setFrame(x, y, w, h)
+
+        y += h + padding
+        h = (frame.width / 1.5).toInt()
 
         list.setFrame(x, y, w, h)
         adapter.width = w
+
+        y += h + padding
+        w = (frame.width / 3).toInt()
+        h = (w / 3).toInt()
+
+        connect.setFrame(x, y, w, h)
+        connect.setBorderColor(2, Color.rgb(0, 100, 0))
+        connect.setCornerRadius(5.0f)
 
         val buttonSize = (60 * getDensity()).toInt()
 

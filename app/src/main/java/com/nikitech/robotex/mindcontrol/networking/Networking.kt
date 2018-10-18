@@ -9,7 +9,7 @@ class Networking {
         @JvmStatic
         val INSTANCE = Networking()
 
-        const val base = "http://192.168.0.168:5000/"
+        const val base = "http://192.168.0.190:5000/"
 
         const val forward = "forward"
         const val stop = "stop"
