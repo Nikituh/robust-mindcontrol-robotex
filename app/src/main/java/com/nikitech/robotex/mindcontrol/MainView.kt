@@ -10,7 +10,7 @@ import mobile.ecofleet.com.common.base.BaseView
 class MainView(context: Context) : BaseView(context) {
 
     companion object {
-        @JvmStatic val DEFAULT_X_BOUNDS = 30000.0
+        @JvmStatic val DEFAULT_X_BOUNDS = 10000.0
     }
 
     val tabBar = TabBar(context)

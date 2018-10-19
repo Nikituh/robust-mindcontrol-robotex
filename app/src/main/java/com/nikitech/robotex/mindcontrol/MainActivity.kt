@@ -19,6 +19,7 @@ import java.io.File
 import com.jjoe64.graphview.series.DataPoint
 import com.jjoe64.graphview.series.LineGraphSeries
 import android.view.WindowManager
+import android.widget.Toast
 import com.nikitech.robotex.mindcontrol.model.*
 import com.nikitech.robotex.mindcontrol.subviews.list.MuseListCell
 import com.nikitech.robotex.mindcontrol.utils.Colors
@@ -349,13 +350,13 @@ class MainActivity : AppCompatActivity() {
             return
         }
 
-        val list = mutableListOf<Muse>()
-        list.add(manager!!.muses[0])
-        list.add(manager!!.muses[0])
-        list.add(manager!!.muses[0])
-        contentView!!.connect.refreshList(list)
+//        val list = mutableListOf<Muse>()
+//        list.add(manager!!.muses[0])
+//        list.add(manager!!.muses[0])
+//        list.add(manager!!.muses[0])
+//        contentView!!.connect.refreshList(list)
 
-//        contentView!!.connect.refreshList(manager!!.muses)
+        contentView!!.connect.refreshList(manager!!.muses)
 
 
     }
@@ -387,12 +388,24 @@ class MainActivity : AppCompatActivity() {
 //            }
         })
 
+        if (current == ConnectionState.CONNECTING) {
+            alert("Connecting")
+        }
+        if (current == ConnectionState.CONNECTED) {
+            alert("Connected!")
+        }
         if (current == ConnectionState.DISCONNECTED) {
             Log.i("MainActivity", "Muse disconnected:" + muse.name)
             // Save the data file once streaming has stopped.
             FileUtils.INSTANCE.save()
             // We have disconnected from the headband, so set our cached copy to null.
             this.muse = null
+        }
+    }
+
+    private fun alert(text: String) {
+        runOnUiThread {
+            Toast.makeText(this, text, Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -435,9 +448,9 @@ class MainActivity : AppCompatActivity() {
 
     private fun setEegChannelValues(buffer: DoubleArray, p: MuseDataPacket) {
 
-//        if (eeg.size > 7000) {
-//            eeg.clear()
-//        }
+        if (eeg.size > MainView.DEFAULT_X_BOUNDS) {
+            eeg.clear()
+        }
 
         buffer[0] = p.getEegChannelValue(Eeg.EEG1)
         buffer[1] = p.getEegChannelValue(Eeg.EEG2)
