@@ -9,7 +9,8 @@ class Networking {
         @JvmStatic
         val INSTANCE = Networking()
 
-        const val base = "http://192.168.0.190:5000/"
+        private var ip = "192.168.43.253"
+        private var base = "http://$ip:5000/"
 
         const val forward = "forward"
         const val stop = "stop"
@@ -18,6 +19,7 @@ class Networking {
         const val reverse = "reverse"
     }
 
+    var delegate: NetworkingDelegate? = null
 
     fun forward() {
         get(forward)
@@ -41,7 +43,26 @@ class Networking {
 
     fun get(command: String) {
         doAsync {
-            khttp.get(base + command)
+            try {
+                val response = khttp.get(base + command, timeout=3.0)
+                print(response)
+            } catch (exception: Exception) {
+
+                var message = exception.message
+
+                if (message == null) {
+                    message = "Unknown error"
+                }
+                delegate?.onError(message)
+            }
         }
     }
+
+    fun updateIpAddress(address: String) {
+        ip = address
+    }
+}
+
+interface NetworkingDelegate {
+    fun onError(message: String)
 }

@@ -19,14 +19,18 @@ import java.io.File
 import com.jjoe64.graphview.series.DataPoint
 import com.jjoe64.graphview.series.LineGraphSeries
 import android.view.WindowManager
+import android.widget.EditText
 import android.widget.Toast
 import com.nikitech.robotex.mindcontrol.model.*
+import com.nikitech.robotex.mindcontrol.networking.NetworkingDelegate
 import com.nikitech.robotex.mindcontrol.subviews.list.MuseListCell
 import com.nikitech.robotex.mindcontrol.utils.Colors
+import org.jetbrains.anko.sdk25.coroutines.onEditorAction
+import org.jetbrains.anko.sdk25.coroutines.onFocusChange
 import org.jetbrains.anko.sdk25.coroutines.onItemClick
 import java.util.*
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), NetworkingDelegate {
 
     private var contentView: MainView? = null
 
@@ -106,6 +110,8 @@ class MainActivity : AppCompatActivity() {
 
         }
 
+        window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
+
         super.onCreate(savedInstanceState)
 
         this.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
@@ -133,6 +139,12 @@ class MainActivity : AppCompatActivity() {
         }
 
         timer.schedule(myTask, 0, (second / 5).toLong())
+
+        Networking.INSTANCE.delegate = this
+    }
+
+    override fun onError(message: String) {
+        alert(message)
     }
 
     private val second = 1000
@@ -248,6 +260,15 @@ class MainActivity : AppCompatActivity() {
 
             contentView!!.connect.show()
         }
+
+        contentView!!.connect.addressField.onEditorAction { v, _, _ ->
+            Networking.INSTANCE.updateIpAddress(v!!.text.toString().trim())
+        }
+
+        contentView!!.connect.addressField.onFocusChange { v, _ ->
+            val field = v as EditText
+            Networking.INSTANCE.updateIpAddress(field.text.toString().trim())
+        }
     }
 
     override fun onPause() {
@@ -266,6 +287,8 @@ class MainActivity : AppCompatActivity() {
         if (isPermissionGranted) {
             manager!!.stopListening()
         }
+
+        contentView!!.connect.addressField.setOnEditorActionListener(null)
     }
 
     private fun initMuse() {
@@ -367,26 +390,6 @@ class MainActivity : AppCompatActivity() {
         // Format a message to show the change of connection state in the UI.
         val status = p.previousConnectionState.toString() + " -> " + current
         Log.i("MainActivity", status)
-
-        // Update the UI with the change in connection state.
-        handler.post(Runnable {
-//            val statusText = findViewById(R.id.con_status) as TextView
-//            statusText.text = status
-//
-//            val museVersion = muse.museVersion
-//            val museVersionText = findViewById(R.id.version) as TextView
-//            // If we haven't yet connected to the headband, the version information
-//            // will be null.  You have to connect to the headband before either the
-//            // MuseVersion or MuseConfiguration information is known.
-//            if (museVersion != null) {
-//                val version = (museVersion.firmwareType + " - "
-//                        + museVersion.firmwareVersion + " - "
-//                        + museVersion.protocolVersion)
-//                museVersionText.text = version
-//            } else {
-//                museVersionText.setText(R.string.undefined)
-//            }
-        })
 
         if (current == ConnectionState.CONNECTING) {
             alert("Connecting")

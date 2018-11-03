@@ -8,12 +8,12 @@ class EEGValue(val one: Double, val two: Double, val three: Double, val four: Do
     companion object {
         @JvmStatic fun fromMuseDataPacket(packet: MuseDataPacket) : EEGValue {
             return EEGValue(
-            packet.getEegChannelValue(Eeg.EEG1),
-            packet.getEegChannelValue(Eeg.EEG2),
-            packet.getEegChannelValue(Eeg.EEG3),
-            packet.getEegChannelValue(Eeg.EEG4),
-            packet.getEegChannelValue(Eeg.AUX_LEFT),
-            packet.getEegChannelValue(Eeg.AUX_RIGHT)
+                packet.getEegChannelValue(Eeg.EEG1),
+                packet.getEegChannelValue(Eeg.EEG2),
+                packet.getEegChannelValue(Eeg.EEG3),
+                packet.getEegChannelValue(Eeg.EEG4),
+                packet.getEegChannelValue(Eeg.AUX_LEFT),
+                packet.getEegChannelValue(Eeg.AUX_RIGHT)
             )
         }
     }

@@ -3,7 +3,9 @@ package com.nikitech.robotex.mindcontrol.subviews
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Color
+import android.text.InputType
 import android.view.Gravity
+import android.widget.EditText
 import android.widget.ListView
 import android.widget.TextView
 import com.choosemuse.libmuse.Muse
@@ -24,6 +26,9 @@ class ConnectContainer(context: Context) : BaseView(context) {
     val connect = TextButton(context, "Connect")
 
     val refresh = ImageButton(context, R.drawable.ic_refresh_black_24dp)
+
+    val addressHeader = TextView(context)
+    val addressField = EditText(context)
 
     init {
 
@@ -47,6 +52,16 @@ class ConnectContainer(context: Context) : BaseView(context) {
         addView(refresh)
 
         list.adapter = adapter
+
+        addressHeader.text = "ip address of your robot"
+        addView(addressHeader)
+
+        addressField.setText("192.168.")
+        addView(addressField)
+
+        isFocusableInTouchMode = true
+
+        addressField.inputType = InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS or InputType.TYPE_NUMBER_FLAG_DECIMAL
     }
 
     override fun layoutSubviews() {
@@ -73,6 +88,16 @@ class ConnectContainer(context: Context) : BaseView(context) {
         connect.setFrame(x, y, w, h)
         connect.setBorderColor(2, Color.rgb(0, 100, 0))
         connect.setCornerRadius(5.0f)
+
+        y += h + padding
+        w = frame.width
+        h = w / 12
+
+        addressHeader.setFrame(x, y, w, h)
+
+        y += h
+        h = w / 8
+        addressField.setFrame(x, y, w, h)
 
         val buttonSize = (60 * getDensity()).toInt()
 
