@@ -3,6 +3,7 @@ package com.nikitech.robotex.mindcontrol.subviews
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Color
+import android.os.Build
 import android.text.InputType
 import android.view.Gravity
 import android.widget.EditText
@@ -11,14 +12,16 @@ import android.widget.TextView
 import com.choosemuse.libmuse.Muse
 import com.nikitech.robotex.mindcontrol.R
 import com.nikitech.robotex.mindcontrol.subviews.list.MuseListAdapter
+import mobile.ecofleet.com.common.base.BaseScrollView
 import mobile.ecofleet.com.common.base.BaseView
 import mobile.ecofleet.com.common.base.setFrame
 import org.jetbrains.anko.backgroundColor
 import org.jetbrains.anko.runOnUiThread
 
-class ConnectContainer(context: Context) : BaseView(context) {
+class ConnectContainer(context: Context) : BaseScrollView(context) {
 
-    val header = TextView(context)
+    private val header = TextView(context)
+    private val subheader = TextView(context)
 
     val list = ListView(context)
     val adapter = MuseListAdapter(context)
@@ -27,7 +30,9 @@ class ConnectContainer(context: Context) : BaseView(context) {
 
     val refresh = ImageButton(context, R.drawable.ic_refresh_black_24dp)
 
-    val addressHeader = TextView(context)
+    private val robotHeader = TextView(context)
+
+    private val addressHeader = TextView(context)
     val addressField = EditText(context)
 
     init {
@@ -35,9 +40,15 @@ class ConnectContainer(context: Context) : BaseView(context) {
         header.text =
                 "If you don't see a list of Brain scanners, " +
                 "tap the button on the top right of the screen. " +
-                "To connect to a device, click on one."
+                "\nTo connect to a device, click on one."
         header.gravity = Gravity.CENTER
         addView(header)
+
+        subheader.text =
+                "Remember to have both bluetooth and location enabled in your settings." +
+                "\nThere are on extra hard checks for this"
+        subheader.gravity = Gravity.CENTER
+        addView(subheader)
 
         list.setBackgroundColor(Color.rgb(245, 245, 245))
         addView(list)
@@ -53,15 +64,25 @@ class ConnectContainer(context: Context) : BaseView(context) {
 
         list.adapter = adapter
 
-        addressHeader.text = "ip address of your robot"
+        robotHeader.text =
+                "Go Tethering & portable hotspot in your Settings. " +
+                "Enable Portable hotspot with the SSID 'musework' and password 'matahaninternetti. " +
+                "Then restart your Raspberry Pi'"
+        robotHeader.gravity = Gravity.CENTER
+        addView(robotHeader)
+
+        addressHeader.text = "Change the ip address of your robot:"
         addView(addressHeader)
 
-        addressField.setText("192.168.")
         addView(addressField)
 
         isFocusableInTouchMode = true
 
         addressField.inputType = InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS or InputType.TYPE_NUMBER_FLAG_DECIMAL
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            refresh.elevation = 5.0F
+        }
     }
 
     override fun layoutSubviews() {
@@ -76,7 +97,11 @@ class ConnectContainer(context: Context) : BaseView(context) {
         header.setFrame(x, y, w, h)
 
         y += h + padding
-        h = (frame.width / 1.5).toInt()
+
+        subheader.setFrame(x, y, w, h)
+
+        y += h + padding
+        h = (frame.width / 3.5).toInt()
 
         list.setFrame(x, y, w, h)
         adapter.width = w
@@ -91,6 +116,11 @@ class ConnectContainer(context: Context) : BaseView(context) {
 
         y += h + padding
         w = frame.width
+        h = (frame.height / 6.5).toInt()
+
+        robotHeader.setFrame(x, y, w, h)
+
+        y += h + padding
         h = w / 12
 
         addressHeader.setFrame(x, y, w, h)

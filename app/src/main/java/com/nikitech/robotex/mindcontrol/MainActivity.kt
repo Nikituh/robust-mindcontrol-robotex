@@ -8,6 +8,7 @@ import android.graphics.Color
 import android.os.*
 import android.support.v7.app.AppCompatActivity
 import android.support.v4.app.ActivityCompat
+import android.text.Editable
 import android.util.Log
 import com.choosemuse.libmuse.*
 import com.jjoe64.graphview.GraphView
@@ -141,6 +142,8 @@ class MainActivity : AppCompatActivity(), NetworkingDelegate {
         timer.schedule(myTask, 0, (second / 5).toLong())
 
         Networking.INSTANCE.delegate = this
+
+        contentView!!.connect.addressField.setText(Networking.INSTANCE.getIpAddress())
     }
 
     override fun onError(message: String) {
@@ -263,11 +266,6 @@ class MainActivity : AppCompatActivity(), NetworkingDelegate {
 
         contentView!!.connect.addressField.onEditorAction { v, _, _ ->
             Networking.INSTANCE.updateIpAddress(v!!.text.toString().trim())
-        }
-
-        contentView!!.connect.addressField.onFocusChange { v, _ ->
-            val field = v as EditText
-            Networking.INSTANCE.updateIpAddress(field.text.toString().trim())
         }
     }
 

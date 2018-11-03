@@ -61,6 +61,10 @@ class Networking {
     fun updateIpAddress(address: String) {
         ip = address
     }
+
+    fun getIpAddress(): String {
+        return ip
+    }
 }
 
 interface NetworkingDelegate {
