@@ -260,8 +260,6 @@ class MainActivity : AppCompatActivity(), NetworkingDelegate {
             contentView!!.connect.adapter.selectedItem = position
             contentView!!.connect.adapter.notifyDataSetChanged()
             contentView!!.connect.connect.show()
-
-            contentView!!.connect.show()
         }
 
         contentView!!.connect.addressField.onEditorAction { v, _, _ ->
