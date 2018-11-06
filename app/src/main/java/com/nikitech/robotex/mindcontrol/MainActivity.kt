@@ -136,6 +136,7 @@ class MainActivity : AppCompatActivity(), NetworkingDelegate {
         val myTask = object : TimerTask() {
             override fun run() {
                 updateUI()
+                calculateMuseCommand()
             }
         }
 
@@ -200,6 +201,39 @@ class MainActivity : AppCompatActivity(), NetworkingDelegate {
             addListToGraph(contentView!!.accelerometer.get(0), xList, Color.BLUE)
             addListToGraph(contentView!!.accelerometer.get(1), yList, Color.GREEN)
             addListToGraph(contentView!!.accelerometer.get(2), zList, Color.RED)
+        }
+    }
+
+    private fun calculateMuseCommand() {
+
+        /*
+         * Kui ma vaatasin EEG2 järgi, siis 500-1000 ei võiks midagi olla.
+         * Alla selle pöörab paremale ja üle selle sõidab otse
+         */
+
+        val median = getMedianOf(eeg, 10)
+
+        if (median < 500) {
+            Networking.INSTANCE.right()
+            print("Sending command: Right")
+        } else if (median > 1000) {
+            Networking.INSTANCE.forward()
+            print("Sending command: Forward")
+        }
+    }
+
+    private fun getMedianOf(eeg: MutableList<EEGValue>, count: Int): Int {
+
+        synchronized(lock) {
+
+            val amount = eeg.takeLast(count)
+
+            var total = 0.0
+
+            for (item in amount) {
+                total += item.two
+            }
+            return total.toInt() / count
         }
     }
 
