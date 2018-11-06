@@ -213,6 +213,10 @@ class MainActivity : AppCompatActivity(), NetworkingDelegate {
 
         val median = getMedianOf(eeg, 10)
 
+        if (median == 0) {
+            return
+        }
+
         if (median < 500) {
             Networking.INSTANCE.right()
             print("Sending command: Right")
