@@ -8,6 +8,8 @@ import org.jetbrains.anko.backgroundColor
 
 class ButtonContainer(context: Context) : BaseView(context) {
 
+    private val container = BaseView(context)
+
     val left = ImageButton(context, R.drawable.ic_arrow_back_black_24dp)
     val forward = ImageButton(context, R.drawable.ic_arrow_upward_black_24dp)
     val right = ImageButton(context, R.drawable.ic_arrow_forward_black_24dp)
@@ -16,25 +18,32 @@ class ButtonContainer(context: Context) : BaseView(context) {
 
     init {
 
-        addView(left)
-        addView(forward)
-        addView(right)
-        addView(reverse)
-        addView(stop)
+        addView(container)
+        container.addView(left)
+        container.addView(forward)
+        container.addView(right)
+        container.addView(reverse)
+        container.addView(stop)
     }
 
     override fun layoutSubviews() {
         super.layoutSubviews()
 
 
-        val padding = frame.width / 10
-        val buttonWidth = (frame.width - 2 * padding) / 3
+        var w = frame.width / 6 * 5
+        var h = w
+        var x = frame.width / 2 - w / 2
+        var y = x
 
+        container.setFrame(x, y, w, h)
 
-        var x = buttonWidth + padding
-        var y = 0
-        val w = buttonWidth
-        val h = buttonWidth
+        val padding = container.frame.width / 10
+        val buttonWidth = (container.frame.width - 2 * padding) / 3
+
+        x = buttonWidth + padding
+        y = 0
+        w = buttonWidth
+        h = buttonWidth
 
         forward.setFrame(x, y, w, h)
 
