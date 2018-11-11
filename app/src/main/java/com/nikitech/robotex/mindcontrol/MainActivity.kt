@@ -211,6 +211,10 @@ class MainActivity : AppCompatActivity(), NetworkingDelegate {
          * Alla selle pöörab paremale ja üle selle sõidab otse
          */
 
+        if (!contentView!!.buttons.eeg.isChecked) {
+            return
+        }
+
         val median = getMedianOf(eeg, 10)
 
         if (median == 0) {
@@ -336,44 +340,17 @@ class MainActivity : AppCompatActivity(), NetworkingDelegate {
         dataListener = DataListener(this)
 
         manager!!.setMuseListener(ChangeListener(this))
-
-        // Start up a thread for asynchronous file operations.
-        // This is only needed if you want to do File I/O.
-        fileThread.start()
     }
+
 
     /**
-     * We don't want to block the UI thread while we write to a file, so the file
-     * writing is moved to a separate thread.
+     * Premission request
      */
-    private val fileThread = object : Thread() {
-        override fun run() {
-
-            Looper.prepare()
-            FileUtils.INSTANCE.fileHandler.set(Handler())
-
-            val dir = getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS)
-            val file = File(dir, "new_muse_file.muse")
-
-            // MuseFileWriter will append to an existing file.
-            // In this case, we want to start fresh so the file
-            // if it exists.
-            if (file.exists()) {
-                file.delete()
-            }
-
-            Log.i("MainActivity", "Writing data to: " + file.absolutePath)
-            FileUtils.INSTANCE.fileWriter.set(MuseFileFactory.getMuseFileWriter(file))
-            Looper.loop()
-        }
-    }
-
     private fun requestPermission(permission: String) {
         ActivityCompat.requestPermissions(this, arrayOf(permission), 1)
     }
 
     private var isPermissionGranted = false
-
     private val PERMISSION_REQUEST_COARSE_LOCATION = 1
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
@@ -392,7 +369,8 @@ class MainActivity : AppCompatActivity(), NetworkingDelegate {
                 } else {
                     val builder = AlertDialog.Builder(this)
                     builder.setTitle("Functionality limited")
-                    builder.setMessage("Since location access has not been granted, " + "this app will not be able to discover beacons when in the background.")
+                    builder.setMessage("Since location access has not been granted, " +
+                            "this app will not be able to discover beacons when in the background.")
                     builder.setPositiveButton(android.R.string.ok, null)
                     builder.setOnDismissListener { }
                     builder.show()
@@ -402,20 +380,15 @@ class MainActivity : AppCompatActivity(), NetworkingDelegate {
         }
     }
 
+    /**
+     * Muse data handling
+     */
     fun museListChanged() {
         if (manager?.muses!!.size == 0) {
             return
         }
 
-//        val list = mutableListOf<Muse>()
-//        list.add(manager!!.muses[0])
-//        list.add(manager!!.muses[0])
-//        list.add(manager!!.muses[0])
-//        contentView!!.connect.refreshList(list)
-
         contentView!!.connect.refreshList(manager!!.muses)
-
-
     }
 
     fun receiveMuseConnectionPacket(p: MuseConnectionPacket, muse: Muse) {
@@ -432,25 +405,12 @@ class MainActivity : AppCompatActivity(), NetworkingDelegate {
             alert("Connected!")
         }
         if (current == ConnectionState.DISCONNECTED) {
-            Log.i("MainActivity", "Muse disconnected:" + muse.name)
-            // Save the data file once streaming has stopped.
-            FileUtils.INSTANCE.save()
-            // We have disconnected from the headband, so set our cached copy to null.
             this.muse = null
-        }
-    }
-
-    private fun alert(text: String) {
-        runOnUiThread {
-            Toast.makeText(this, text, Toast.LENGTH_SHORT).show()
         }
     }
 
     fun receiveMuseDataPacket(p: MuseDataPacket, muse: Muse) {
 
-        FileUtils.INSTANCE.writeDataPacketToFile(p)
-
-        // valuesSize returns the number of data values contained in the packet.
         val n = p.valuesSize()
         when (p.packetType()) {
             MuseDataPacketType.EEG -> {
@@ -466,7 +426,6 @@ class MainActivity : AppCompatActivity(), NetworkingDelegate {
             }
             MuseDataPacketType.ALPHA_RELATIVE -> {
                 assert(alphaBuffer.size >= n)
-//                setEegChannelValues(alphaBuffer, p)
                 alphaStale = true
             }
             MuseDataPacketType.BATTERY, MuseDataPacketType.DRL_REF, MuseDataPacketType.QUANTIZATION -> {
@@ -481,6 +440,9 @@ class MainActivity : AppCompatActivity(), NetworkingDelegate {
     }
 
 
+    /**
+     * EEG data handling
+     */
     private val eeg = mutableListOf<EEGValue>()
 
     private fun setEegChannelValues(buffer: DoubleArray, p: MuseDataPacket) {
@@ -500,6 +462,10 @@ class MainActivity : AppCompatActivity(), NetworkingDelegate {
             eeg.add(EEGValue.fromMuseDataPacket(p))
         }
     }
+
+    /**
+     * Accelerometer data handling
+     */
 
     private val accelerometer = mutableListOf<AccelerometerValue>()
 
@@ -524,6 +490,16 @@ class MainActivity : AppCompatActivity(), NetworkingDelegate {
         val series = LineGraphSeries(Collections.synchronizedCollection(list).toTypedArray())
         series.backgroundColor = color
         graph.addSeries(series)
+    }
+
+    /**
+     * Utils, helper functions
+     */
+
+    private fun alert(text: String) {
+        runOnUiThread {
+            Toast.makeText(this, text, Toast.LENGTH_SHORT).show()
+        }
     }
 
 }
