@@ -241,7 +241,11 @@ class MainActivity : AppCompatActivity(), NetworkingDelegate {
             for (item in amount) {
                 total += item.two
             }
-            return total.toInt() / count
+
+            val median = total.toInt() / count
+            println(median)
+
+            return median
         }
     }
 
@@ -249,22 +253,27 @@ class MainActivity : AppCompatActivity(), NetworkingDelegate {
         super.onResume()
 
         contentView!!.buttons.left.onClick {
+            updateIPAddress()
             Networking.INSTANCE.left()
         }
 
         contentView!!.buttons.forward.onClick {
+            updateIPAddress()
             Networking.INSTANCE.forward()
         }
 
         contentView!!.buttons.right.onClick {
+            updateIPAddress()
             Networking.INSTANCE.right()
         }
 
         contentView!!.buttons.reverse.onClick {
+            updateIPAddress()
             Networking.INSTANCE.reverse()
         }
 
         contentView!!.buttons.stop.onClick {
+            updateIPAddress()
             Networking.INSTANCE.stop()
         }
 
@@ -303,10 +312,6 @@ class MainActivity : AppCompatActivity(), NetworkingDelegate {
             contentView!!.connect.adapter.notifyDataSetChanged()
             contentView!!.connect.connect.show()
         }
-
-        contentView!!.connect.addressField.onEditorAction { v, _, _ ->
-            Networking.INSTANCE.updateIpAddress(v!!.text.toString().trim())
-        }
     }
 
     override fun onPause() {
@@ -327,6 +332,14 @@ class MainActivity : AppCompatActivity(), NetworkingDelegate {
         }
 
         contentView!!.connect.addressField.setOnEditorActionListener(null)
+    }
+
+    private fun updateIPAddress() {
+        val address = contentView!!.connect.addressField.text.toString().trim()
+        if (Networking.INSTANCE.getIpAddress() == address) {
+            return
+        }
+        Networking.INSTANCE.updateIpAddress(address)
     }
 
     private fun initMuse() {
