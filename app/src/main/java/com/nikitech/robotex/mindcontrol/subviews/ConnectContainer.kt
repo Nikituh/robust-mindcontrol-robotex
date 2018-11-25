@@ -46,7 +46,7 @@ class ConnectContainer(context: Context) : BaseScrollView(context) {
 
         subheader.text =
                 "Remember to have both bluetooth and location enabled in your settings." +
-                "\nThere are on extra hard checks for this"
+                "\nThere are no extra hard checks for this"
         subheader.gravity = Gravity.CENTER
         addView(subheader)
 
