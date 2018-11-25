@@ -4,6 +4,7 @@ import android.content.Context
 import android.graphics.Color
 import android.view.View
 import com.jjoe64.graphview.GraphView
+import com.nikitech.robotex.mindcontrol.model.Command
 import com.nikitech.robotex.mindcontrol.subviews.*
 import mobile.ecofleet.com.common.base.BaseView
 
@@ -107,6 +108,7 @@ class MainView(context: Context) : BaseView(context) {
             }
         }
     }
+
     private fun setConnectActive() {
         tabBar.setActiveItem(0)
         EEG.visibility = View.GONE
@@ -145,5 +147,26 @@ class MainView(context: Context) : BaseView(context) {
 
         EEG.visibility = View.VISIBLE
     }
+
+    fun isCommandButtonPressed(): Boolean {
+        for (button in buttons.list) {
+            if (button.isPressedDown) {
+                return true
+            }
+        }
+
+        return false
+    }
+
+    fun getPressedButtonCommand(): String {
+        for (button in buttons.list) {
+            if (button.isPressedDown) {
+                return button.command
+            }
+        }
+
+        return Command.NONE.string
+    }
+
 
 }

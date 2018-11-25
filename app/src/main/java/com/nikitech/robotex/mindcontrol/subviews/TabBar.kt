@@ -8,10 +8,10 @@ import mobile.ecofleet.com.common.base.BaseView
 
 class TabBar(context: Context) : BaseView(context) {
 
-    val connect = TabView(context, "CONNECT")
-    val control = TabView(context, "CONTROL")
-    val accelerometer = TabView(context, "ACCEL.")
-    val EEG = TabView(context, "EEG")
+    private val connect = TabView(context, "CONNECT")
+    private val control = TabView(context, "CONTROL")
+    private val accelerometer = TabView(context, "ACCEL.")
+    private val EEG = TabView(context, "EEG")
 
     private val separators = mutableListOf<BaseView>()
     val list = mutableListOf<TabView>()
@@ -58,11 +58,15 @@ class TabBar(context: Context) : BaseView(context) {
         }
     }
 
+    fun isGraphTabActive() : Boolean {
+        return EEG.isHighlighted() || accelerometer.isHighlighted()
+    }
+
     fun setActiveItem(index: Int) {
         this.setActiveItem(list[index])
     }
 
-    fun setActiveItem(tab: TabView) {
+    private fun setActiveItem(tab: TabView) {
         for (item in list) {
             item.normalize()
         }

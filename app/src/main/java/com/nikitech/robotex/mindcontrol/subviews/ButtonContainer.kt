@@ -6,6 +6,7 @@ import android.view.Gravity
 import android.widget.Switch
 import android.widget.TextView
 import com.nikitech.robotex.mindcontrol.R
+import com.nikitech.robotex.mindcontrol.model.Command
 import mobile.ecofleet.com.common.base.BaseView
 import mobile.ecofleet.com.common.base.setFrame
 import org.jetbrains.anko.backgroundColor
@@ -14,11 +15,13 @@ class ButtonContainer(context: Context) : BaseView(context) {
 
     private val container = BaseView(context)
 
-    val left = ImageButton(context, R.drawable.ic_arrow_back_black_24dp)
-    val forward = ImageButton(context, R.drawable.ic_arrow_upward_black_24dp)
-    val right = ImageButton(context, R.drawable.ic_arrow_forward_black_24dp)
-    val reverse = ImageButton(context, R.drawable.ic_arrow_downward_black_24dp)
-    val stop = ImageButton(context, R.drawable.ic_stop_black_24dp)
+    val left = CommandButton(context, R.drawable.ic_arrow_back_black_24dp, Command.LEFT.string)
+    val forward = CommandButton(context, R.drawable.ic_arrow_upward_black_24dp, Command.FORWARD.string)
+    val right = CommandButton(context, R.drawable.ic_arrow_forward_black_24dp, Command.RIGHT.string)
+    val reverse = CommandButton(context, R.drawable.ic_arrow_downward_black_24dp, Command.REVERSE.string)
+    val stop = CommandButton(context, R.drawable.ic_stop_black_24dp, Command.STOP.string)
+
+    val list = mutableListOf<CommandButton>()
 
     val eeg = Switch(context)
     private val switchText = TextView(context)
@@ -32,6 +35,12 @@ class ButtonContainer(context: Context) : BaseView(context) {
         container.addView(right)
         container.addView(reverse)
         container.addView(stop)
+
+        list.add(left)
+        list.add(forward)
+        list.add(right)
+        list.add(reverse)
+        list.add(stop)
 
         addView(eeg)
 

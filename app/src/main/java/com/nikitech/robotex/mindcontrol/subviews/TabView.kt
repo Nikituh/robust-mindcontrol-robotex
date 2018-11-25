@@ -3,6 +3,7 @@ package com.nikitech.robotex.mindcontrol.subviews
 import android.content.Context
 import android.graphics.Color
 import android.view.Gravity
+import android.view.MotionEvent
 import android.widget.TextView
 import com.nikitech.robotex.mindcontrol.base.BaseButton
 import com.nikitech.robotex.mindcontrol.utils.Colors
@@ -39,6 +40,7 @@ class TabView(context: Context, text : String) : BaseButton(context) {
     }
 
     private var isHighlighted = false
+
     fun highlight() {
         title.setBackgroundColor(Colors.mainDarker)
         isHighlighted = true

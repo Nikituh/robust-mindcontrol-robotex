@@ -1,5 +1,7 @@
 package com.nikitech.robotex.mindcontrol.networking
 
+import com.nikitech.robotex.mindcontrol.model.Command
+import com.nikitech.robotex.mindcontrol.model.EEGValue
 import org.jetbrains.anko.doAsync
 
 
@@ -12,33 +14,29 @@ class Networking {
         private var ip = "192.168.43.129"
         private var base = "http://$ip:5000/"
 
-        const val forward = "forward"
-        const val stop = "stop"
-        const val left = "left"
-        const val right = "right"
-        const val reverse = "reverse"
+        const val storageUrl = "http://prototypes.nikitech.eu/mindcontrol/store.php"
     }
 
     var delegate: NetworkingDelegate? = null
 
     fun forward() {
-        get(forward)
+        get(Command.FORWARD.string)
     }
 
     fun stop() {
-        get(stop)
+        get(Command.STOP.string)
     }
 
     fun left() {
-        get(left)
+        get(Command.LEFT.string)
     }
 
     fun right() {
-        get(right)
+        get(Command.RIGHT.string)
     }
 
     fun reverse() {
-        get(reverse)
+        get(Command.REVERSE.string)
     }
 
     fun get(command: String) {
@@ -47,15 +45,30 @@ class Networking {
                 val response = khttp.get(base + command, timeout=3.0)
                 print(response)
             } catch (exception: Exception) {
-
-                var message = exception.message
-
-                if (message == null) {
-                    message = "Unknown error"
-                }
-                delegate?.onError(message)
+                callException(exception)
             }
         }
+    }
+
+    fun post(data: List<EEGValue>) {
+        doAsync {
+            try {
+                val response = khttp.post(storageUrl, data = data)
+                println(response)
+            } catch (exception: Exception) {
+                callException(exception)
+            }
+        }
+    }
+
+    private fun callException(exception: Exception) {
+
+        var message = exception.message
+
+        if (message == null) {
+            message = "Unknown error"
+        }
+        delegate?.onError(message)
     }
 
     fun updateIpAddress(address: String) {

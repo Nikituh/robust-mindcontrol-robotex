@@ -158,6 +158,11 @@ class MainActivity : AppCompatActivity(), NetworkingDelegate {
 
     private fun updateUI() {
 
+        if (!contentView!!.tabBar.isGraphTabActive()) {
+            // Don't attempt to update UI if graph tab isn't visible
+            return
+        }
+
         val eeg1list = mutableListOf<DataPoint>()
         val eeg2list = mutableListOf<DataPoint>()
         val eeg3list = mutableListOf<DataPoint>()
@@ -206,10 +211,9 @@ class MainActivity : AppCompatActivity(), NetworkingDelegate {
 
     private fun calculateMuseCommand() {
 
-        /*
-         * Kui ma vaatasin EEG2 järgi, siis 500-1000 ei võiks midagi olla.
-         * Alla selle pöörab paremale ja üle selle sõidab otse
-         */
+//        val pressed = contentView!!.getPressedButtonCommand()
+//        println("Pressed: $pressed")
+//        return
 
         if (!contentView!!.buttons.eeg.isChecked) {
             return
@@ -233,6 +237,12 @@ class MainActivity : AppCompatActivity(), NetworkingDelegate {
         if (median1 == 0) {
             return
         }
+
+
+        /*
+         * Kui ma vaatasin EEG2 järgi, siis 500-1000 ei võiks midagi olla.
+         * Alla selle pöörab paremale ja üle selle sõidab otse
+         */
 
 //        if (median < 500) {
 //            Networking.INSTANCE.right()
@@ -467,6 +477,7 @@ class MainActivity : AppCompatActivity(), NetworkingDelegate {
      * EEG data handling
      */
     private val eeg = mutableListOf<EEGValue>()
+    private val uploadedEeg = mutableListOf<EEGValue>()
 
     private fun setEegChannelValues(buffer: DoubleArray, p: MuseDataPacket) {
 
@@ -481,8 +492,15 @@ class MainActivity : AppCompatActivity(), NetworkingDelegate {
         buffer[4] = p.getEegChannelValue(Eeg.AUX_LEFT)
         buffer[5] = p.getEegChannelValue(Eeg.AUX_RIGHT)
 
+        val value = EEGValue.fromMuseDataPacket(p)
+
         synchronized(lock) {
-            eeg.add(EEGValue.fromMuseDataPacket(p))
+            eeg.add(value)
+        }
+
+        if (contentView!!.isCommandButtonPressed()) {
+            value.command = contentView!!.getPressedButtonCommand()
+            uploadedEeg.add(value)
         }
     }
 

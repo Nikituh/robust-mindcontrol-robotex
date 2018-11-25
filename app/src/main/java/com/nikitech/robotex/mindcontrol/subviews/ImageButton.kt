@@ -7,7 +7,7 @@ import android.widget.ImageView
 import com.nikitech.robotex.mindcontrol.base.BaseButton
 import mobile.ecofleet.com.common.base.setFrame
 
-class ImageButton(context: Context, imageResource: Int) : BaseButton(context) {
+open class ImageButton(context: Context, imageResource: Int) : BaseButton(context) {
 
     private val imageView = ImageView(context)
 
@@ -27,7 +27,7 @@ class ImageButton(context: Context, imageResource: Int) : BaseButton(context) {
     }
 
 
-    fun setImageResource(resource: Int) {
+    private fun setImageResource(resource: Int) {
         imageView.setImageResource(resource)
         imageView.tag = resource
     }

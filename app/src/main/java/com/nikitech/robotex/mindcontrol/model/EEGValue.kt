@@ -5,6 +5,11 @@ import com.choosemuse.libmuse.MuseDataPacket
 
 class EEGValue(val one: Double, val two: Double, val three: Double, val four: Double, val auxLeft: Double, val auxRight: Double) {
 
+    /**
+     * Intended command for the robot, used when uploading data
+     */
+    var command: String? = null
+
     fun getValue(enum: Eeg) : Double {
         return when (enum) {
             Eeg.EEG1 -> one
