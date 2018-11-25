@@ -5,6 +5,17 @@ import com.choosemuse.libmuse.MuseDataPacket
 
 class EEGValue(val one: Double, val two: Double, val three: Double, val four: Double, val auxLeft: Double, val auxRight: Double) {
 
+    fun getValue(enum: Eeg) : Double {
+        return when (enum) {
+            Eeg.EEG1 -> one
+            Eeg.EEG2 -> two
+            Eeg.EEG3 -> three
+            Eeg.EEG4 -> three
+            Eeg.AUX_LEFT -> auxLeft
+            else -> auxRight
+        }
+    }
+
     companion object {
         @JvmStatic fun fromMuseDataPacket(packet: MuseDataPacket) : EEGValue {
             return EEGValue(

@@ -8,26 +8,20 @@ import android.graphics.Color
 import android.os.*
 import android.support.v7.app.AppCompatActivity
 import android.support.v4.app.ActivityCompat
-import android.text.Editable
 import android.util.Log
 import com.choosemuse.libmuse.*
 import com.jjoe64.graphview.GraphView
 import com.nikitech.robotex.mindcontrol.networking.Networking
 import com.nikitech.robotex.mindcontrol.utils.DeviceUtils
-import com.nikitech.robotex.mindcontrol.utils.FileUtils
 import org.jetbrains.anko.sdk25.coroutines.onClick
-import java.io.File
 import com.jjoe64.graphview.series.DataPoint
 import com.jjoe64.graphview.series.LineGraphSeries
 import android.view.WindowManager
-import android.widget.EditText
 import android.widget.Toast
 import com.nikitech.robotex.mindcontrol.model.*
 import com.nikitech.robotex.mindcontrol.networking.NetworkingDelegate
 import com.nikitech.robotex.mindcontrol.subviews.list.MuseListCell
 import com.nikitech.robotex.mindcontrol.utils.Colors
-import org.jetbrains.anko.sdk25.coroutines.onEditorAction
-import org.jetbrains.anko.sdk25.coroutines.onFocusChange
 import org.jetbrains.anko.sdk25.coroutines.onItemClick
 import java.util.*
 
@@ -133,14 +127,20 @@ class MainActivity : AppCompatActivity(), NetworkingDelegate {
         setContentView(contentView)
 
         val timer = Timer()
-        val myTask = object : TimerTask() {
+
+        val uiUpdateTimer = object : TimerTask() {
             override fun run() {
                 updateUI()
+            }
+        }
+        val commandCalculationTimer = object : TimerTask() {
+            override fun run() {
                 calculateMuseCommand()
             }
         }
 
-        timer.schedule(myTask, 0, (second / 5).toLong())
+        timer.schedule(uiUpdateTimer, 0, (second / 5).toLong())
+        timer.schedule(commandCalculationTimer, 0, (second).toLong())
 
         Networking.INSTANCE.delegate = this
 
@@ -215,22 +215,35 @@ class MainActivity : AppCompatActivity(), NetworkingDelegate {
             return
         }
 
-        val median = getMedianOf(eeg, 10)
+        val count = 300
+        val median1 = getMedianOf(Eeg.EEG1, count)
+        val median2 = getMedianOf(Eeg.EEG2, count)
+        val median3 = getMedianOf(Eeg.EEG3, count)
+        val median4 = getMedianOf(Eeg.EEG4, count)
 
-        if (median == 0) {
+        println("EEG Values:")
+        println("1: $median1")
+        println("2: $median2")
+        println("3: $median3")
+        println("4: $median4")
+        println("-----------")
+        println("Total: " + eeg.size)
+        println("           ")
+
+        if (median1 == 0) {
             return
         }
 
-        if (median < 500) {
-            Networking.INSTANCE.right()
-            print("Sending command: Right")
-        } else if (median > 1000) {
-            Networking.INSTANCE.forward()
-            print("Sending command: Forward")
-        }
+//        if (median < 500) {
+//            Networking.INSTANCE.right()
+//            print("Sending command: Right")
+//        } else if (median > 1000) {
+//            Networking.INSTANCE.forward()
+//            print("Sending command: Forward")
+//        }
     }
 
-    private fun getMedianOf(eeg: MutableList<EEGValue>, count: Int): Int {
+    private fun getMedianOf(enum: Eeg, count: Int): Int {
 
         synchronized(lock) {
 
@@ -239,13 +252,10 @@ class MainActivity : AppCompatActivity(), NetworkingDelegate {
             var total = 0.0
 
             for (item in amount) {
-                total += item.two
+                total += item.getValue(enum)
             }
 
-            val median = total.toInt() / count
-            println(median)
-
-            return median
+            return total.toInt() / count
         }
     }
 
