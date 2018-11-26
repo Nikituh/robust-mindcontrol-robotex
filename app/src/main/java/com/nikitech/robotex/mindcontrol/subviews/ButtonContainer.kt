@@ -2,6 +2,7 @@ package com.nikitech.robotex.mindcontrol.subviews
 
 import android.content.Context
 import android.graphics.Color
+import android.os.Build
 import android.view.Gravity
 import android.widget.Switch
 import android.widget.TextView
@@ -22,6 +23,9 @@ class ButtonContainer(context: Context) : BaseView(context) {
     val stop = CommandButton(context, R.drawable.ic_stop_black_24dp, Command.STOP.string)
 
     val list = mutableListOf<CommandButton>()
+
+
+    val upload = ImageButton(context, R.drawable.ic_cloud_upload_black_24dp)
 
     val eeg = Switch(context)
     private val switchText = TextView(context)
@@ -47,20 +51,26 @@ class ButtonContainer(context: Context) : BaseView(context) {
         switchText.text = "Listen to eeg events"
         switchText.gravity = Gravity.CENTER
         addView(switchText)
+
+        upload.setBackgroundColor(Color.rgb(30,144,255))
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            upload.elevation = 5f
+        }
+        addView(upload)
     }
 
     override fun layoutSubviews() {
         super.layoutSubviews()
 
 
-        var w = frame.width / 6 * 5
+        var w = (frame.width / 6 * 4.5).toInt()
         var h = w
         var x = frame.width / 2 - w / 2
         var y = x
 
         container.setFrame(x, y, w, h)
 
-        val padding = container.frame.width / 10
+        var padding = container.frame.width / 10
         val buttonWidth = (container.frame.width - 2 * padding) / 3
 
         x = buttonWidth + padding
@@ -97,9 +107,18 @@ class ButtonContainer(context: Context) : BaseView(context) {
         eeg.setFrame(x, y, w, h)
 
         x += w
-        w = frame.width / 3
+        w = frame.width / 2
 
         switchText.setFrame(x, y, w, h)
+
+        padding = (10 * getDensity()).toInt()
+        val buttonSize = (60 * getDensity()).toInt()
+
+        x = frame.width - (buttonSize + padding)
+        y = frame.height - (buttonSize + padding)
+
+        upload.setFrame(x, y, buttonSize, buttonSize)
+        upload.setCornerRadius((buttonSize / 2).toFloat())
     }
 
 }

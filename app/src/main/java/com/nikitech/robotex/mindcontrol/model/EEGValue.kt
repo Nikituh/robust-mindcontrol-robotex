@@ -2,6 +2,8 @@ package com.nikitech.robotex.mindcontrol.model
 
 import com.choosemuse.libmuse.Eeg
 import com.choosemuse.libmuse.MuseDataPacket
+import org.json.JSONArray
+import org.json.JSONObject
 
 class EEGValue(val one: Double, val two: Double, val three: Double, val four: Double, val auxLeft: Double, val auxRight: Double) {
 
@@ -32,5 +34,27 @@ class EEGValue(val one: Double, val two: Double, val three: Double, val four: Do
                 packet.getEegChannelValue(Eeg.AUX_RIGHT)
             )
         }
+
+        @JvmStatic fun toJson(list: List<EEGValue>) : JSONArray {
+            val array = JSONArray()
+
+            for (item in list) {
+                array.put(item.toJson())
+            }
+
+            return array
+        }
+    }
+
+    private fun toJson(): JSONObject {
+        val item = JSONObject()
+
+        item.put("eeg1", this.one)
+        item.put("eeg2", this.two)
+        item.put("eeg3", this.three)
+        item.put("eeg4", this.four)
+        item.put("command", this.command)
+
+        return item
     }
 }

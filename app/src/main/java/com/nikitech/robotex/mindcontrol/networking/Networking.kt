@@ -14,7 +14,7 @@ class Networking {
         private var ip = "192.168.43.129"
         private var base = "http://$ip:5000/"
 
-        const val storageUrl = "http://prototypes.nikitech.eu/mindcontrol/store.php"
+        const val storageUrl = "http://prototypes.nikitech.eu/mindcontrol/store_command.php"
     }
 
     var delegate: NetworkingDelegate? = null
@@ -53,7 +53,10 @@ class Networking {
     fun post(data: List<EEGValue>) {
         doAsync {
             try {
-                val response = khttp.post(storageUrl, data = data)
+                val json = EEGValue.toJson(data)
+                val response = khttp.post(storageUrl, data = json)
+                val string = response.text
+                val array = response.jsonArray
                 println(response)
             } catch (exception: Exception) {
                 callException(exception)
