@@ -15,6 +15,8 @@ class Networking {
         private var base = "http://$ip:5000/"
 
         const val storageUrl = "http://prototypes.nikitech.eu/mindcontrol/store_command.php"
+
+        const val REQUEST_TYPE_UPLOAD_COMMAND = 1
     }
 
     var delegate: NetworkingDelegate? = null
@@ -54,10 +56,8 @@ class Networking {
         doAsync {
             try {
                 val json = EEGValue.toJson(data)
-                val response = khttp.post(storageUrl, data = json)
-                val string = response.text
-                val array = response.jsonArray
-                println(response)
+                khttp.post(storageUrl, data = json)
+                delegate!!.onSuccess(REQUEST_TYPE_UPLOAD_COMMAND, "Successfully uploaded EEG data")
             } catch (exception: Exception) {
                 callException(exception)
             }
@@ -84,5 +84,8 @@ class Networking {
 }
 
 interface NetworkingDelegate {
+
     fun onError(message: String)
+
+    fun onSuccess(type: Int, message: String)
 }

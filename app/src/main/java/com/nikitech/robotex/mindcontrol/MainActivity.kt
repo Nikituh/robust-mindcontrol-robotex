@@ -162,6 +162,14 @@ class MainActivity : AppCompatActivity(), NetworkingDelegate {
         alert(message)
     }
 
+    override fun onSuccess(type: Int, message: String) {
+        alert(message)
+
+        if (type == Networking.REQUEST_TYPE_UPLOAD_COMMAND) {
+            eegToUpload.clear()
+        }
+    }
+
     private val second = 1000
     private val lock = Any()
 
@@ -343,6 +351,10 @@ class MainActivity : AppCompatActivity(), NetworkingDelegate {
             contentView!!.connect.adapter.notifyDataSetChanged()
             contentView!!.connect.connect.show()
         }
+
+        contentView!!.buttons.upload.onClick {
+            Networking.INSTANCE.post(eegToUpload)
+        }
     }
 
     override fun onPause() {
@@ -363,6 +375,8 @@ class MainActivity : AppCompatActivity(), NetworkingDelegate {
         }
 
         contentView!!.connect.addressField.setOnEditorActionListener(null)
+
+        contentView!!.buttons.upload.setOnClickListener(null)
     }
 
     private fun updateIPAddress() {
@@ -488,7 +502,7 @@ class MainActivity : AppCompatActivity(), NetworkingDelegate {
      * EEG data handling
      */
     private val eeg = mutableListOf<EEGValue>()
-    private val uploadedEeg = mutableListOf<EEGValue>()
+    private val eegToUpload = mutableListOf<EEGValue>()
 
     private fun setEegChannelValues(buffer: DoubleArray, p: MuseDataPacket) {
 
@@ -511,7 +525,7 @@ class MainActivity : AppCompatActivity(), NetworkingDelegate {
 
         if (contentView!!.isCommandButtonPressed()) {
             value.command = contentView!!.getPressedButtonCommand()
-            uploadedEeg.add(value)
+            eegToUpload.add(value)
         }
     }
 
