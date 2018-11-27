@@ -145,17 +145,6 @@ class MainActivity : AppCompatActivity(), NetworkingDelegate {
         Networking.INSTANCE.delegate = this
 
         contentView!!.connect.addressField.setText(Networking.INSTANCE.getIpAddress())
-
-        val data = mutableListOf<EEGValue>()
-        var item = EEGValue(0.0, 0.0, 0.0, 0.0, 0.0, 0.0)
-        item.command = "left"
-        data.add(item)
-
-        item = EEGValue(1.0, 1.0, 1.0, 1.0, 1.0, 1.0)
-        item.command = "right"
-        data.add(item)
-
-        Networking.INSTANCE.post(data)
     }
 
     override fun onError(message: String) {
