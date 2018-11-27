@@ -514,6 +514,11 @@ class MainActivity : AppCompatActivity(), NetworkingDelegate {
         }
 
         if (contentView!!.isCommandButtonPressed() && contentView!!.buttons.collect.isChecked) {
+            /**
+             * TODO:
+             * Douglar-Peucker that shit:
+             * https://en.wikipedia.org/wiki/Ramer%E2%80%93Douglas%E2%80%93Peucker_algorithm
+             */
             value.command = contentView!!.getPressedButtonCommand()
             eegToUpload.add(value)
         }
