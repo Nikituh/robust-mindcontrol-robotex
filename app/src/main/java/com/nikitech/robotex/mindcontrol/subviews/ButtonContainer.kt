@@ -10,7 +10,6 @@ import com.nikitech.robotex.mindcontrol.R
 import com.nikitech.robotex.mindcontrol.model.Command
 import mobile.ecofleet.com.common.base.BaseView
 import mobile.ecofleet.com.common.base.setFrame
-import org.jetbrains.anko.backgroundColor
 
 class ButtonContainer(context: Context) : BaseView(context) {
 
@@ -27,8 +26,11 @@ class ButtonContainer(context: Context) : BaseView(context) {
 
     val upload = ImageButton(context, R.drawable.ic_cloud_upload_black_24dp)
 
-    val eeg = Switch(context)
-    private val switchText = TextView(context)
+    val listen = Switch(context)
+    private val listenSwitchText = TextView(context)
+
+    val collect = Switch(context)
+    private val collectSwitchText = TextView(context)
 
     init {
 
@@ -46,11 +48,17 @@ class ButtonContainer(context: Context) : BaseView(context) {
         list.add(reverse)
         list.add(stop)
 
-        addView(eeg)
+        addView(listen)
 
-        switchText.text = "Listen to eeg events"
-        switchText.gravity = Gravity.CENTER
-        addView(switchText)
+        listenSwitchText.text = "Listen to eeg events"
+        listenSwitchText.gravity = Gravity.CENTER
+        addView(listenSwitchText)
+
+        addView(collect)
+
+        collectSwitchText.text = "Collect data"
+        collectSwitchText.gravity = Gravity.CENTER
+        addView(collectSwitchText)
 
         upload.setBackgroundColor(Color.rgb(30,144,255))
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -104,12 +112,26 @@ class ButtonContainer(context: Context) : BaseView(context) {
         w = frame.width / 8
         h = w
 
-        eeg.setFrame(x, y, w, h)
+        val listenX = x
+        val listenW = w
+        listen.setFrame(x, y, w, h)
 
         x += w
         w = frame.width / 2
 
-        switchText.setFrame(x, y, w, h)
+        val listenTextW = w
+        listenSwitchText.setFrame(x, y, w, h)
+
+        x = listenX
+        y += h
+        w = listenW
+
+        collect.setFrame(x, y, w, h)
+
+        x += w
+        w = listenTextW
+
+        collectSwitchText.setFrame(x, y, w, h)
 
         padding = (10 * getDensity()).toInt()
         val buttonSize = (60 * getDensity()).toInt()

@@ -234,7 +234,7 @@ class MainActivity : AppCompatActivity(), NetworkingDelegate {
 //        println("Pressed: $pressed")
 //        return
 
-        if (!contentView!!.buttons.eeg.isChecked) {
+        if (!contentView!!.buttons.listen.isChecked) {
             return
         }
 
@@ -523,7 +523,7 @@ class MainActivity : AppCompatActivity(), NetworkingDelegate {
             eeg.add(value)
         }
 
-        if (contentView!!.isCommandButtonPressed()) {
+        if (contentView!!.isCommandButtonPressed() && contentView!!.buttons.collect.isChecked) {
             value.command = contentView!!.getPressedButtonCommand()
             eegToUpload.add(value)
         }
