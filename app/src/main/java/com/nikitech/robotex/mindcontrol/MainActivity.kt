@@ -343,6 +343,7 @@ class MainActivity : AppCompatActivity(), NetworkingDelegate {
 
         contentView!!.buttons.upload.onClick {
             Networking.INSTANCE.post(eegToUpload)
+            alert("""Uploading ${eegToUpload.size} items""")
         }
     }
 
