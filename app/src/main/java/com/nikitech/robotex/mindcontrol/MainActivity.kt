@@ -345,9 +345,16 @@ class MainActivity : AppCompatActivity(), NetworkingDelegate {
         contentView!!.buttons.upload.onClick {
 
             val simplified = DouglasPeucker().apply(eegToUpload)
+
+            if (simplified.isEmpty()) {
+                alert("Invalid data: clearing list, please try again")
+                eegToUpload.clear()
+                return@onClick
+            }
+            
+            Networking.INSTANCE.post(simplified)
+            alert("""Uploading ${simplified.size} items""")
             eegToUpload.clear()
-//            Networking.INSTANCE.post(eegToUpload)
-//            alert("""Uploading ${eegToUpload.size} items""")
         }
     }
 

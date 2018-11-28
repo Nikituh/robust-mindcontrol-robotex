@@ -82,6 +82,10 @@ class DouglasPeucker {
 
         val lowest = findLowestCount(eeg1, eeg2, eeg3, eeg4)
 
+        if (lowest == 2) {
+            return mutableListOf()
+        }
+
         for (i in 0 until lowest) {
             val value = EEGValue(eeg1[i].second, eeg2[i].second, eeg3[i].second, eeg4[i].second, -1.0, -1.0)
             value.command = command
