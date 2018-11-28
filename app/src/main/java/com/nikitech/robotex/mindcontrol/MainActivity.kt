@@ -22,6 +22,7 @@ import com.nikitech.robotex.mindcontrol.model.*
 import com.nikitech.robotex.mindcontrol.networking.NetworkingDelegate
 import com.nikitech.robotex.mindcontrol.subviews.list.MuseListCell
 import com.nikitech.robotex.mindcontrol.utils.Colors
+import com.nikitech.robotex.mindcontrol.utils.DouglasPeucker
 import org.jetbrains.anko.sdk25.coroutines.onItemClick
 import java.util.*
 
@@ -342,8 +343,11 @@ class MainActivity : AppCompatActivity(), NetworkingDelegate {
         }
 
         contentView!!.buttons.upload.onClick {
-            Networking.INSTANCE.post(eegToUpload)
-            alert("""Uploading ${eegToUpload.size} items""")
+
+            val simplified = DouglasPeucker().apply(eegToUpload)
+            eegToUpload.clear()
+//            Networking.INSTANCE.post(eegToUpload)
+//            alert("""Uploading ${eegToUpload.size} items""")
         }
     }
 
@@ -514,11 +518,6 @@ class MainActivity : AppCompatActivity(), NetworkingDelegate {
         }
 
         if (contentView!!.isCommandButtonPressed() && contentView!!.buttons.collect.isChecked) {
-            /**
-             * TODO:
-             * Douglar-Peucker that shit:
-             * https://en.wikipedia.org/wiki/Ramer%E2%80%93Douglas%E2%80%93Peucker_algorithm
-             */
             value.command = contentView!!.getPressedButtonCommand()
             eegToUpload.add(value)
         }

@@ -17,7 +17,7 @@ class EEGValue(val one: Double, val two: Double, val three: Double, val four: Do
             Eeg.EEG1 -> one
             Eeg.EEG2 -> two
             Eeg.EEG3 -> three
-            Eeg.EEG4 -> three
+            Eeg.EEG4 -> four
             Eeg.AUX_LEFT -> auxLeft
             else -> auxRight
         }
@@ -43,6 +43,18 @@ class EEGValue(val one: Double, val two: Double, val three: Double, val four: Do
             }
 
             return array
+        }
+
+        @JvmStatic fun toPointList(list: List<EEGValue>, type: Eeg) : List<Pair<Double, Double>> {
+            val result = mutableListOf<Pair<Double, Double>>()
+
+            var index = 0.0
+            for (item in list) {
+                result.add(Pair(index, item.getValue(type)))
+                index++
+            }
+
+            return result
         }
     }
 
