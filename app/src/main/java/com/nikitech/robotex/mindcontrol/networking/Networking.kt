@@ -14,7 +14,7 @@ class Networking {
         private var ip = "192.168.43.129"
         private var base = "http://$ip:5000/"
 
-        const val storageUrl = "http://prototypes.nikitech.eu/mindcontrol/store_command.php"
+        const val storageUrl = "http://prototypes.nikitech.eu/mindcontrol/data/store.php"
 
         const val REQUEST_TYPE_UPLOAD_COMMAND = 1
     }

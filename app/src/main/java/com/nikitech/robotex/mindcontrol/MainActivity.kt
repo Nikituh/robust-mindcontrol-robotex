@@ -351,7 +351,7 @@ class MainActivity : AppCompatActivity(), NetworkingDelegate {
                 eegToUpload.clear()
                 return@onClick
             }
-            
+
             Networking.INSTANCE.post(simplified)
             alert("""Uploading ${simplified.size} items""")
             eegToUpload.clear()
