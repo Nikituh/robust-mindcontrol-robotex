@@ -6,6 +6,8 @@ import mobile.ecofleet.com.common.base.BaseView
 
 open class BaseButton(context: Context) : BaseView(context) {
 
+    var shouldPreventDuplicateClick: Boolean = false
+
     override fun onTouchEvent(event: MotionEvent?): Boolean {
 
         if (!isEnabled) {

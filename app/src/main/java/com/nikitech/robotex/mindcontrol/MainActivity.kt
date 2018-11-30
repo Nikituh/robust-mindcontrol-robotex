@@ -344,6 +344,19 @@ class MainActivity : AppCompatActivity(), NetworkingDelegate {
 
         contentView!!.buttons.upload.onClick {
 
+            if (contentView!!.buttons.upload.shouldPreventDuplicateClick) {
+                /**
+                 * Kotlin Courotines onClick fires onClick event twice, prevent second
+                 */
+                contentView!!.buttons.upload.shouldPreventDuplicateClick = false
+                return@onClick
+            }
+
+            contentView!!.buttons.upload.shouldPreventDuplicateClick = true
+
+//            println("click while preventing second!")
+//            return@onClick
+
             val simplified = DouglasPeucker().apply(eegToUpload)
 
             if (simplified.isEmpty()) {
