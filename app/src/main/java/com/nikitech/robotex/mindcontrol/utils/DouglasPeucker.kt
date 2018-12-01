@@ -63,7 +63,7 @@ class DouglasPeucker {
     fun apply(values: List<EEGValue>) : List<EEGValue> {
 
         if (values.isEmpty()) {
-            println("No values to simplify")
+//            println("No values to simplify")
             return values
         }
 
@@ -71,7 +71,7 @@ class DouglasPeucker {
         // store YOUR SINGLE command here and add it to the result list
         val command = values[0].command
 
-        println("EEG Points before simplification: " + values.size)
+//        println("EEG Points before simplification: " + values.size)
 
         val result = mutableListOf<EEGValue>()
 
@@ -118,7 +118,7 @@ class DouglasPeucker {
         val pointList = EEGValue.toPointList(list, type)
         val outList = mutableListOf<Pair<Double, Double>>()
         calculateRamerDouglasPeucker(pointList, 2.0, outList)
-        println(type.toString() + " Points remaining after simplification: " + outList.size)
+//        println(type.toString() + " Points remaining after simplification: " + outList.size)
         return outList
     }
 }

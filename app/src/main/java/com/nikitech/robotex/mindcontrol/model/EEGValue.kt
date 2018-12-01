@@ -56,6 +56,16 @@ class EEGValue(val one: Double, val two: Double, val three: Double, val four: Do
 
             return result
         }
+
+        @JvmStatic fun getSortedListOf(list: List<EEGValue>, enum: Eeg): List<Int> {
+            val doubles = mutableListOf<Int>()
+
+            for (item in list) {
+                doubles.add(item.getValue(enum).toInt())
+            }
+
+            return doubles.sorted()
+        }
     }
 
     private fun toJson(): JSONObject {

@@ -6,5 +6,5 @@ enum class Command(val string: String) {
     LEFT("left"),
     RIGHT("right"),
     REVERSE("reverse"),
-    NONE("none")
+    NONE("none  ")
 }

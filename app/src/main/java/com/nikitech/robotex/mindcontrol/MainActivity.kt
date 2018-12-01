@@ -220,32 +220,64 @@ class MainActivity : AppCompatActivity(), NetworkingDelegate {
 
     private fun calculateMuseCommand() {
 
+        var simplified = listOf<EEGValue>()
+        synchronized(lock) {
+            simplified = DouglasPeucker().apply(eegToSimplify)
+            eegToSimplify.clear()
+        }
+
+        if (simplified.isEmpty()) {
+//            println("No values to compare")
+            return
+        }
+
+//        val one = getMeanOf(simplified, Eeg.EEG1, simplified.size)
+//        val two = getMeanOf(simplified, Eeg.EEG2, simplified.size)
+//        val three = getMeanOf(simplified, Eeg.EEG3, simplified.size)
+//        val four = getMeanOf(simplified, Eeg.EEG4, simplified.size)
+
+        val one = getMedianOf(simplified, Eeg.EEG1)
+        val two = getMedianOf(simplified, Eeg.EEG2)
+        val three = getMedianOf(simplified, Eeg.EEG3)
+        val four = getMedianOf(simplified, Eeg.EEG4)
+
+        if (one > 500 && two > 500 && three > 500 && four > 500 &&
+                one < 1000 && two < 1000 && three < 1000 && four < 1000) {
+            println("Sending command: Forward")
+            Networking.INSTANCE.forward()
+        } else if (one < 500 && two < 500 && three < 500 && four < 500) {
+            println("Sending command: Stop")
+            Networking.INSTANCE.stop()
+        } else {
+            println("$one, $two, $three, $four")
+        }
+
 //        val pressed = contentView!!.getPressedButtonCommand()
 //        println("Pressed: $pressed")
 //        return
 
-        if (!contentView!!.buttons.listen.isChecked) {
-            return
-        }
-
-        val count = 300
-        val median1 = getMedianOf(Eeg.EEG1, count)
-        val median2 = getMedianOf(Eeg.EEG2, count)
-        val median3 = getMedianOf(Eeg.EEG3, count)
-        val median4 = getMedianOf(Eeg.EEG4, count)
-
-        println("EEG Values:")
-        println("1: $median1")
-        println("2: $median2")
-        println("3: $median3")
-        println("4: $median4")
-        println("-----------")
-        println("Total: " + eeg.size)
-        println("           ")
-
-        if (median1 == 0) {
-            return
-        }
+//        if (!contentView!!.buttons.listen.isChecked) {
+//            return
+//        }
+//
+//        val count = 300
+//        val median1 = getMedianOf(Eeg.EEG1, count)
+//        val median2 = getMedianOf(Eeg.EEG2, count)
+//        val median3 = getMedianOf(Eeg.EEG3, count)
+//        val median4 = getMedianOf(Eeg.EEG4, count)
+//
+//        println("EEG Values:")
+//        println("1: $median1")
+//        println("2: $median2")
+//        println("3: $median3")
+//        println("4: $median4")
+//        println("-----------")
+//        println("Total: " + eeg.size)
+//        println("           ")
+//
+//        if (median1 == 0) {
+//            return
+//        }
 
 
         /*
@@ -262,11 +294,11 @@ class MainActivity : AppCompatActivity(), NetworkingDelegate {
 //        }
     }
 
-    private fun getMedianOf(enum: Eeg, count: Int): Int {
+    private fun getMeanOf(list: List<EEGValue>, enum: Eeg, count: Int): Int {
 
         synchronized(lock) {
 
-            val amount = eeg.takeLast(count)
+            val amount = list.takeLast(count)
 
             var total = 0.0
 
@@ -275,6 +307,16 @@ class MainActivity : AppCompatActivity(), NetworkingDelegate {
             }
 
             return total.toInt() / count
+        }
+    }
+
+    private fun getMedianOf(list: List<EEGValue>, enum: Eeg): Int {
+        val m = EEGValue.getSortedListOf(list, enum)
+        val middle = m.size / 2
+        return if (m.size % 2 === 1) {
+            m[middle]
+        } else {
+            (m[middle - 1] + m[middle]) / 2
         }
     }
 
@@ -517,6 +559,7 @@ class MainActivity : AppCompatActivity(), NetworkingDelegate {
      */
     private val eeg = mutableListOf<EEGValue>()
     private val eegToUpload = mutableListOf<EEGValue>()
+    private val eegToSimplify = mutableListOf<EEGValue>()
 
     private fun setEegChannelValues(buffer: DoubleArray, p: MuseDataPacket) {
 
@@ -535,6 +578,12 @@ class MainActivity : AppCompatActivity(), NetworkingDelegate {
 
         synchronized(lock) {
             eeg.add(value)
+        }
+
+        if (contentView!!.buttons.listen.isChecked) {
+            synchronized(lock) {
+                eegToSimplify.add(value)
+            }
         }
 
         if (contentView!!.isCommandButtonPressed() && contentView!!.buttons.collect.isChecked) {
