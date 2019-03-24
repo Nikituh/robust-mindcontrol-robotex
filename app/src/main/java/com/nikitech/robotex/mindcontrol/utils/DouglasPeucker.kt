@@ -1,6 +1,7 @@
 package com.nikitech.robotex.mindcontrol.utils
 
 import com.choosemuse.libmuse.Eeg
+import com.nikitech.robotex.mindcontrol.model.AccelerometerValue
 import com.nikitech.robotex.mindcontrol.model.EEGValue
 
 
@@ -117,6 +118,11 @@ class DouglasPeucker {
     private fun calculateOutPoints(list: List<EEGValue>, type: Eeg) : List<Pair<Double, Double>> {
         val pointList = EEGValue.toPointList(list, type)
         val outList = mutableListOf<Pair<Double, Double>>()
+
+        if (pointList.size < 2) {
+            return outList
+        }
+
         calculateRamerDouglasPeucker(pointList, 2.0, outList)
 //        println(type.toString() + " Points remaining after simplification: " + outList.size)
         return outList

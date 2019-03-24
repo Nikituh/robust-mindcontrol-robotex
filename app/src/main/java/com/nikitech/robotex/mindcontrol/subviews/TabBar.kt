@@ -77,7 +77,16 @@ class TabBar(context: Context) : BaseView(context) {
 
         for (item in list) {
             if (item.isHighlighted() && item.isAccelTab()) {
+                return true
+            }
+        }
+        return false
+    }
 
+    fun isActiveTabEeg(): Boolean {
+        for (item in list) {
+            if (item.isHighlighted() && item.isEEGTab()) {
+                return true
             }
         }
         return false

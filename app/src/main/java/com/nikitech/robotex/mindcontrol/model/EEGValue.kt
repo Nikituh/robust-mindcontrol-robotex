@@ -50,7 +50,14 @@ class EEGValue(val one: Double, val two: Double, val three: Double, val four: Do
 
             var index = 0.0
             for (item in list) {
-                result.add(Pair(index, item.getValue(type)))
+                val value = item.getValue(type)
+
+                if (value < 50 || value > 1600) {
+                    // Remove outliers
+                    continue
+                }
+
+                result.add(Pair(index, value))
                 index++
             }
 

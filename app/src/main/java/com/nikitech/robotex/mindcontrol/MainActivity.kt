@@ -140,12 +140,43 @@ class MainActivity : AppCompatActivity(), NetworkingDelegate {
             }
         }
 
+        val accelerometerCommandTimer = object : TimerTask() {
+            override fun run() {
+                calculateAccelerometerCommand()
+            }
+        }
+
         timer.schedule(uiUpdateTimer, 0, (second / 5).toLong())
         timer.schedule(commandCalculationTimer, 0, (second).toLong())
+        timer.schedule(accelerometerCommandTimer, 0, (second).toLong())
 
         Networking.INSTANCE.delegate = this
 
         contentView!!.connect.addressField.setText(Networking.INSTANCE.getIpAddress())
+    }
+
+    private fun calculateAccelerometerCommand() {
+
+        if (accelerometer.isEmpty()) {
+            return
+        }
+
+        val value = accelerometer.last()
+
+        if (value.isOutlier()) {
+            return
+        }
+
+        println("" + value.x.toTwoDecimals() + ", " + value.y.toTwoDecimals() + ", " + value.z.toTwoDecimals())
+
+        if (value.x > -0.6 && value.y > -0.6) {
+            println("what")
+        }
+        if (value.x > -0.6 && value.x < -0.9 && value.y > -0.5 && value.y < -0.8) {
+            println("left!")
+        } else if (value.x > 0.4 && value.x < 0.5 && value.y > 0.8 && value.y < 0.9) {
+            println("right!")
+        }
     }
 
     override fun onError(message: String) {
@@ -231,27 +262,28 @@ class MainActivity : AppCompatActivity(), NetworkingDelegate {
             return
         }
 
-//        val one = getMeanOf(simplified, Eeg.EEG1, simplified.size)
-//        val two = getMeanOf(simplified, Eeg.EEG2, simplified.size)
-//        val three = getMeanOf(simplified, Eeg.EEG3, simplified.size)
-//        val four = getMeanOf(simplified, Eeg.EEG4, simplified.size)
+        val oneMean = getMeanOf(simplified, Eeg.EEG1, simplified.size)
+        val twoMean = getMeanOf(simplified, Eeg.EEG2, simplified.size)
+        val threeMean = getMeanOf(simplified, Eeg.EEG3, simplified.size)
+        val fourMean = getMeanOf(simplified, Eeg.EEG4, simplified.size)
 
-        val one = getMedianOf(simplified, Eeg.EEG1)
-        val two = getMedianOf(simplified, Eeg.EEG2)
-        val three = getMedianOf(simplified, Eeg.EEG3)
-        val four = getMedianOf(simplified, Eeg.EEG4)
+        val oneMedian = getMedianOf(simplified, Eeg.EEG1)
+        val twoMedian = getMedianOf(simplified, Eeg.EEG2)
+        val threeMedian = getMedianOf(simplified, Eeg.EEG3)
+        val fourMedian = getMedianOf(simplified, Eeg.EEG4)
 
-        if (one > 500 && two > 500 && three > 500 && four > 500 &&
-                one < 1000 && two < 1000 && three < 1000 && four < 1000) {
-            println("Sending command: Forward")
-            Networking.INSTANCE.forward()
-        } else if (one < 500 && two < 500 && three < 500 && four < 500) {
-            println("Sending command: Stop")
-            Networking.INSTANCE.stop()
-        } else {
-            println("$one, $two, $three, $four")
-        }
-
+//        if (one > 500 && two > 500 && three > 500 && four > 500 &&
+//                one < 1000 && two < 1000 && three < 1000 && four < 1000) {
+//            println("Sending command: Forward")
+//            Networking.INSTANCE.forward()
+//        } else if (one < 500 && two < 500 && three < 500 && four < 500) {
+//            println("Sending command: Stop")
+//            Networking.INSTANCE.stop()
+//        } else {
+//            println("$one, $two, $three, $four")
+//        }
+        println("Mean  : $oneMean, $twoMean, $threeMean, $fourMean")
+        println("Median: $oneMedian, $twoMedian, $threeMedian, $fourMedian")
 //        val pressed = contentView!!.getPressedButtonCommand()
 //        println("Pressed: $pressed")
 //        return
@@ -361,15 +393,19 @@ class MainActivity : AppCompatActivity(), NetworkingDelegate {
 
         contentView!!.connect.connect.onClick {
 
-            activeMuse!!.registerConnectionListener(connectionListener)
-            activeMuse!!.registerDataListener(dataListener, MuseDataPacketType.EEG)
-            activeMuse!!.registerDataListener(dataListener, MuseDataPacketType.ALPHA_RELATIVE)
-            activeMuse!!.registerDataListener(dataListener, MuseDataPacketType.ACCELEROMETER)
-            activeMuse!!.registerDataListener(dataListener, MuseDataPacketType.BATTERY)
-            activeMuse!!.registerDataListener(dataListener, MuseDataPacketType.DRL_REF)
-            activeMuse!!.registerDataListener(dataListener, MuseDataPacketType.QUANTIZATION)
+            if (contentView!!.connect.connect.text.text == "Disconnect") {
+                activeMuse!!.disconnect(true)
+            } else {
+                activeMuse!!.registerConnectionListener(connectionListener)
+                activeMuse!!.registerDataListener(dataListener, MuseDataPacketType.EEG)
+                activeMuse!!.registerDataListener(dataListener, MuseDataPacketType.ALPHA_RELATIVE)
+                activeMuse!!.registerDataListener(dataListener, MuseDataPacketType.ACCELEROMETER)
+                activeMuse!!.registerDataListener(dataListener, MuseDataPacketType.BATTERY)
+                activeMuse!!.registerDataListener(dataListener, MuseDataPacketType.DRL_REF)
+                activeMuse!!.registerDataListener(dataListener, MuseDataPacketType.QUANTIZATION)
 
-            activeMuse!!.runAsynchronously()
+                activeMuse!!.runAsynchronously()
+            }
         }
 
         val context = this
@@ -396,8 +432,6 @@ class MainActivity : AppCompatActivity(), NetworkingDelegate {
 
             contentView!!.buttons.upload.shouldPreventDuplicateClick = true
 
-//            println("click while preventing second!")
-//            return@onClick
 
             val simplified = DouglasPeucker().apply(eegToUpload)
 
@@ -517,6 +551,7 @@ class MainActivity : AppCompatActivity(), NetworkingDelegate {
         }
         if (current == ConnectionState.CONNECTED) {
             alert("Connected!")
+            contentView!!.connect.connect.text.text = "Disconnect"
         }
         if (current == ConnectionState.DISCONNECTED) {
             this.muse = null
@@ -562,6 +597,10 @@ class MainActivity : AppCompatActivity(), NetworkingDelegate {
     private val eegToSimplify = mutableListOf<EEGValue>()
 
     private fun setEegChannelValues(buffer: DoubleArray, p: MuseDataPacket) {
+
+        if (!contentView!!.tabBar.isActiveTabEeg()) {
+            return
+        }
 
         if (eeg.size > MainView.DEFAULT_X_BOUNDS) {
             eeg.clear()
@@ -631,4 +670,8 @@ class MainActivity : AppCompatActivity(), NetworkingDelegate {
         }
     }
 
+}
+
+private fun Double.toTwoDecimals(): Double {
+    return "%.2f".format(this).toDouble()
 }

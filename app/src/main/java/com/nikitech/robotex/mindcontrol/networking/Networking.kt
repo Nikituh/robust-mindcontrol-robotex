@@ -12,7 +12,9 @@ class Networking {
         val INSTANCE = Networking()
 
         private var ip = "192.168.43.129"
-        private var base = "http://$ip:5000/"
+        fun getBaseUrl(): String {
+            return "http://$ip:5000/"
+        }
 
         const val storageUrl = "http://prototypes.nikitech.eu/mindcontrol/data/store.php"
 
@@ -44,7 +46,7 @@ class Networking {
     fun get(command: String) {
         doAsync {
             try {
-                val response = khttp.get(base + command, timeout=3.0)
+                val response = khttp.get(getBaseUrl() + command, timeout=3.0)
                 print(response)
             } catch (exception: Exception) {
                 callException(exception)
