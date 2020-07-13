@@ -9,7 +9,7 @@ class Networking {
         @JvmStatic
         val INSTANCE = Networking()
 
-        private var ip = "192.168.43.253"
+        private var ip = "192.168.43.93"
         private var base = "http://$ip:5000/"
 
         const val forward = "forward"

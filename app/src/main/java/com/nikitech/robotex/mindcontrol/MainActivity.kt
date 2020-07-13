@@ -6,29 +6,29 @@ import android.content.pm.ActivityInfo
 import android.content.pm.PackageManager
 import android.graphics.Color
 import android.os.*
-import android.support.v7.app.AppCompatActivity
 import android.support.v4.app.ActivityCompat
-import android.text.Editable
+import android.support.v4.app.FragmentActivity
+import android.support.v7.app.AppCompatActivity
 import android.util.Log
+import android.view.WindowManager
+import android.widget.Toast
 import com.choosemuse.libmuse.*
 import com.jjoe64.graphview.GraphView
-import com.nikitech.robotex.mindcontrol.networking.Networking
-import com.nikitech.robotex.mindcontrol.utils.DeviceUtils
-import com.nikitech.robotex.mindcontrol.utils.FileUtils
-import org.jetbrains.anko.sdk25.coroutines.onClick
-import java.io.File
 import com.jjoe64.graphview.series.DataPoint
 import com.jjoe64.graphview.series.LineGraphSeries
-import android.view.WindowManager
-import android.widget.EditText
-import android.widget.Toast
 import com.nikitech.robotex.mindcontrol.model.*
+import com.nikitech.robotex.mindcontrol.networking.Networking
 import com.nikitech.robotex.mindcontrol.networking.NetworkingDelegate
 import com.nikitech.robotex.mindcontrol.subviews.list.MuseListCell
 import com.nikitech.robotex.mindcontrol.utils.Colors
+import com.nikitech.robotex.mindcontrol.utils.DeviceUtils
+import com.nikitech.robotex.mindcontrol.utils.FileUtils
+import org.jetbrains.anko.sdk25.coroutines.onClick
 import org.jetbrains.anko.sdk25.coroutines.onEditorAction
-import org.jetbrains.anko.sdk25.coroutines.onFocusChange
 import org.jetbrains.anko.sdk25.coroutines.onItemClick
+import java.io.File
+import java.net.InetAddress
+import java.net.NetworkInterface
 import java.util.*
 
 class MainActivity : AppCompatActivity(), NetworkingDelegate {
@@ -201,6 +201,26 @@ class MainActivity : AppCompatActivity(), NetworkingDelegate {
             addListToGraph(contentView!!.accelerometer.get(1), yList, Color.GREEN)
             addListToGraph(contentView!!.accelerometer.get(2), zList, Color.RED)
         }
+
+//        {
+            val en: Enumeration<NetworkInterface?> = NetworkInterface.getNetworkInterfaces()
+            while (en.hasMoreElements()) {
+                val intf: NetworkInterface? = en.nextElement()
+                val enumIpAddr: Enumeration<InetAddress?> = intf!!.inetAddresses
+                while (enumIpAddr.hasMoreElements()) {
+                    val inetAddress: InetAddress? = enumIpAddr.nextElement()
+
+                    if (inetAddress == null) {
+                        println("inetAddress is null!")
+                        continue
+                    }
+                    if (!inetAddress.isLoopbackAddress) {
+
+                        println("address: $inetAddress");
+                    }
+                }
+            }
+//        }
     }
 
     override fun onResume() {

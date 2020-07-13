@@ -8,7 +8,7 @@ android {
     compileSdkVersion 28
     defaultConfig {
         applicationId "com.nikitech.robotex.mindcontrol"
-        minSdkVersion 17
+        minSdkVersion 19
         targetSdkVersion 28
         versionCode 1
         versionName "1.0"
@@ -27,7 +27,7 @@ dependencies {
     implementation"org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation 'com.android.support:appcompat-v7:28.0.0'
     implementation "org.jetbrains.anko:anko:0.10.5"
-    implementation 'khttp:khttp:0.1.0'
+    implementation "io.karn:khttp-android:0.1.2"
     implementation 'com.jjoe64:graphview:4.2.2'
     implementation files('libs/libmuse_android.jar')
 
